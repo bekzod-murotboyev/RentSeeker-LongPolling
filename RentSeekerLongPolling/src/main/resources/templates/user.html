@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>USERS</title>
+</head>
+<body>
+<div class="container-fluid p-5 bg-dark">
+    <div class="row m-5">
+        <div class="col-md-10 offset-1">
+            <table class="table table-striped table-hover bg-white rounded">
+                <caption class="text-success">List of users</caption>
+                <div class="thead">
+                    <tr>
+                        <td>#</td>
+                        <td>CHAT ID</td>
+                        <td>NAME</td>
+                        <td>USERNAME</td>
+                        <td>PHONE</td>
+                        <td>ROLE</td>
+                        <td>STATE</td>
+                        <td>LANGUAGE</td>
+                    </tr>
+                </div>
+                <tbody>
+                <tr th:each="user,count: ${response.getObject()}">
+                    <td th:text="${count.count}"></td>
+                    <td th:text="${user.chatId}"></td>
+                    <td th:text="${user.name}"></td>
+                    <td th:text="${user.username==''}?'none':${user.username}"></td>
+                    <td th:text="${user.phoneNumber==''}?'none':${user.phoneNumber}"></td>
+                    <td th:text="${user.role}"></td>
+                    <td th:text="${user.state}"></td>
+                    <td th:text="${user.language}"></td>
+                </tr>
+                </tbody>
+            </table>
+            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</html>
