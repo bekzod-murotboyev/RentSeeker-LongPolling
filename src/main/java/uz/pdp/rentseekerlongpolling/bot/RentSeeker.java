@@ -507,11 +507,11 @@ public class RentSeeker extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return USERNAME;
+        return USERNAME_TEST;
     }
 
     @Override
     public String getBotToken() {
-        return TOKEN;
+        return TOKEN_TEST;
     }
 }

@@ -21,9 +21,6 @@ public class LikeService {
 
     private final LikeRepository likeRepository;
 
-    public void saveLike(Like like) {
-        likeRepository.save(like);
-    }
 
     public Like getLikeByHomeIdAndUserId(Home home, User user) {
         Optional<Like> like = likeRepository.findByHomeIdAndUserId(home.getId(), user.getId());

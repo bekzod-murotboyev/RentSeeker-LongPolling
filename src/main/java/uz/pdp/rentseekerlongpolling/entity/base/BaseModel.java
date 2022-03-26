@@ -27,7 +27,7 @@ public abstract class BaseModel {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
-    protected boolean active=true;
+    protected boolean active = true;
 
     @CreationTimestamp
     LocalDateTime createdDate;

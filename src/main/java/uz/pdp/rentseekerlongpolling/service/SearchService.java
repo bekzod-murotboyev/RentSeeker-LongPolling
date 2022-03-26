@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import uz.pdp.rentseekerlongpolling.entity.Home;
 import uz.pdp.rentseekerlongpolling.entity.Search;
 import uz.pdp.rentseekerlongpolling.entity.User;
+import uz.pdp.rentseekerlongpolling.payload.SearchDTO;
 import uz.pdp.rentseekerlongpolling.repository.SearchRepository;
 
 import java.util.ArrayList;

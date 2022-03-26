@@ -13,7 +13,11 @@ public interface HomeRepository extends JpaRepository<Home, UUID> {
 
     List<Home> findAllByUserId(UUID user_id);
 
+    Page<Home> findByUser_PhoneNumber(String phoneNumber, Pageable pageable);
+
     Optional<Home> findByUser_ChatIdAndActiveFalse(String user_chatId);
 
     Page<Home> findAllByActiveTrue(Pageable pageable);
+
+    List<Home> findByActive(boolean active);
 }

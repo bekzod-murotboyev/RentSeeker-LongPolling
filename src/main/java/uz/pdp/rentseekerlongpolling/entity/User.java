@@ -2,11 +2,13 @@ package uz.pdp.rentseekerlongpolling.entity;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.userdetails.UserDetails;
 import uz.pdp.rentseekerlongpolling.entity.base.BaseModel;
 import uz.pdp.rentseekerlongpolling.util.enums.BotState;
 import uz.pdp.rentseekerlongpolling.util.enums.Language;
 import uz.pdp.rentseekerlongpolling.util.enums.Role;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -18,12 +20,20 @@ import javax.persistence.Enumerated;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity(name = "users")
-public class User extends BaseModel {
+public class User extends BaseModel  {
+
     String name;
+
+    @Column(unique = true)
     String phoneNumber;
+
+    @Column(unique = true)
     String username;
+
     String chatId;
+
     String code;
+
     int crtPage;
 
     @Enumerated(value = EnumType.STRING)

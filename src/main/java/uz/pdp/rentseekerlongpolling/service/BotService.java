@@ -277,8 +277,9 @@ public class BotService {
     }
 
     public EditMessageText setWriteOrSendLocationMenuEdit(Update update, Language lan) {
-        saveHomeStatus(update);
-        Message message = update.hasMessage() ? update.getMessage() : update.getCallbackQuery().getMessage();
+        Message message = getMessage(update);
+        if (update.hasCallbackQuery() && !update.getCallbackQuery().getData().startsWith("BACK"))
+            saveHomeStatus(update);
         InlineKeyboardMarkup markup = InlineKeyboardService.createMarkup(List.of(
                 List.of(WRITE_ADDRESS, SEND_LOCATION),
                 List.of(BACK_TO_GIVE_HOME_STATUS)
@@ -389,7 +390,7 @@ public class BotService {
         Home home = new Home();
         home.setStatus(query.getData().equals(FOR_RENTING) ? HomeStatus.RENT : query.getData().equals(FOR_SELLING) ? HomeStatus.SELL : null);
         home.setUser(user);
-        homeService.addHome(home,query.getMessage().getChatId().toString(),null);
+        homeService.addHome(home, query.getMessage().getChatId().toString(), null);
     }
 
     private Region saveHomeRegion(Update update, BotState state) {
@@ -877,8 +878,7 @@ public class BotService {
         User user = userService.getByChatId(message.getChatId().toString());
         int page = user.getCrtPage() + (data.equals(PREV) ? -1 : data.startsWith(NEXT) ? 1 : 0);
         if (page < 0) return null;
-        Pageable pageable = PageRequest.of(page, pageableSize, Sort.by(Sort.Order.asc("createdDate")));
-        Page<Home> allHome = homeService.getAllActiveHomes(pageable);
+        Page<Home> allHome = homeService.getAllActiveHomes(page,pageableSize);
         if (allHome.isEmpty()) {
             if (user.getCrtPage() > 0)
                 userService.changeUserPageByChatId(user.getChatId(), user.getCrtPage() - 1);
@@ -1013,7 +1013,7 @@ public class BotService {
         Like like = likeService.getById(UUID.fromString(update.getCallbackQuery().getData()));
         User user = userService.getByChatId(message.getChatId().toString());
         Home home = homeService.getById(like.getHome().getId());
-        like = likeService.changeLike(like,home);
+        like = likeService.changeLike(like, home);
 
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
@@ -1103,25 +1103,38 @@ public class BotService {
 
     public BotState getStateBySkip(Update update, BotState state) {
         switch (state) {
-            case CHOOSE_REGION :  {
+            case CHOOSE_REGION: {
                 saveSearchRegion(update);
                 state = BotState.CHOOSE_HOME_STATUS;
-            }break;
-            case CHOOSE_DISTRICT :  state = BotState.CHOOSE_HOME_STATUS;break;
-            case CHOOSE_HOME_STATUS :  state = BotState.CHOOSE_HOME_TYPE;break;
-            case CHOOSE_HOME_TYPE :  state = BotState.CHOOSE_HOME_NUMBER_EDIT;break;
+            }
+            break;
+            case CHOOSE_DISTRICT:
+                state = BotState.CHOOSE_HOME_STATUS;
+                break;
+            case CHOOSE_HOME_STATUS:
+                state = BotState.CHOOSE_HOME_TYPE;
+                break;
+            case CHOOSE_HOME_TYPE:
+                state = BotState.CHOOSE_HOME_NUMBER_EDIT;
+                break;
             case CHOOSE_HOME_NUMBER_EDIT:
-                case CHOOSE_HOME_NUMBER_SEND :  state = BotState.CHOOSE_HOME_MIN_PRICE_EDIT;break;
+            case CHOOSE_HOME_NUMBER_SEND:
+                state = BotState.CHOOSE_HOME_MIN_PRICE_EDIT;
+                break;
             case CHOOSE_HOME_MIN_PRICE_SEND:
-                case CHOOSE_HOME_MIN_PRICE_EDIT :  state = BotState.CHOOSE_HOME_MAX_PRICE_EDIT;break;
+            case CHOOSE_HOME_MIN_PRICE_EDIT:
+                state = BotState.CHOOSE_HOME_MAX_PRICE_EDIT;
+                break;
             case CHOOSE_HOME_MAX_PRICE_SEND:
-                case CHOOSE_HOME_MAX_PRICE_EDIT :  state = BotState.SHOW_SORTED_OPTIONS;break;
-            default :  state = BotState.ERROR;
+            case CHOOSE_HOME_MAX_PRICE_EDIT:
+                state = BotState.SHOW_SORTED_OPTIONS;
+                break;
+            default:
+                state = BotState.ERROR;
         }
 
         return state;
     }
-
 
 
     public EditMessageText chooseDistrict(Update update, Language lan) {
@@ -1521,7 +1534,7 @@ public class BotService {
         Message message = update.getMessage();
         User user = userService.getByChatId(message.getChatId().toString());
         user.setCode(UUID.randomUUID().toString().substring(0, 4));
-        new Thread(() ->  emailComponent.sendCode(user.getPhoneNumber(), user.getCode())).start();
+        new Thread(() -> emailComponent.sendCode(user.getPhoneNumber(), user.getCode())).start();
         userService.save(user);
 
         SendMessage sendMessage = new SendMessage(message.getChatId().toString(), getWord(CHECK_USER_BY_ADMIN_TEXT, lan));
@@ -1531,12 +1544,12 @@ public class BotService {
         return sendMessage;
     }
 
-    public SendMessage banUserMenu(Update update,Language lan) {
+    public SendMessage banUserMenu(Update update, Language lan) {
         Message message = getMessage(update);
-        return new SendMessage(message.getChatId().toString(),getWord(BAN_MENU_TEXT,lan));
+        return new SendMessage(message.getChatId().toString(), getWord(BAN_MENU_TEXT, lan));
     }
 
-    private Message getMessage(Update update){
-        return update.hasMessage()?update.getMessage():update.getCallbackQuery().getMessage();
+    private Message getMessage(Update update) {
+        return update.hasMessage() ? update.getMessage() : update.getCallbackQuery().getMessage();
     }
 }

@@ -2,15 +2,17 @@ package uz.pdp.rentseekerlongpolling.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uz.pdp.rentseekerlongpolling.entity.Home;
 import uz.pdp.rentseekerlongpolling.entity.Like;
-import uz.pdp.rentseekerlongpolling.entity.User;
+import uz.pdp.rentseekerlongpolling.payload.SearchDTO;
 import uz.pdp.rentseekerlongpolling.repository.HomeRepository;
 import uz.pdp.rentseekerlongpolling.util.enums.BotState;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +21,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class HomeService {
-
 
     private final UserService userService;
 
@@ -30,6 +31,8 @@ public class HomeService {
         if (state == null) {
             if (crtHome != null)
                 home.setId(crtHome.getId());
+            home.setCreatedDate(LocalDateTime.now());
+            home.setUpdatedDate(LocalDateTime.now());
             homeRepository.save(home);
             return;
         }
@@ -75,8 +78,12 @@ public class HomeService {
         return homeRepository.findAll();
     }
 
-    public Page<Home> getAllActiveHomes(Pageable pageable) {
-        return homeRepository.findAllByActiveTrue(pageable);
+    public List<Home> getAllHome(Integer page,Integer size) {
+        return homeRepository.findAll(PageRequest.of(page,size,Sort.by("createdDate"))).getContent();
+    }
+
+    public Page<Home> getAllActiveHomes(Integer page,Integer size) {
+        return homeRepository.findAllByActiveTrue(PageRequest.of(page,size, Sort.by("createdDate").ascending()));
     }
 
     public Home getNoActiveHomeByChatId(String chatId) {
@@ -147,8 +154,37 @@ public class HomeService {
         return homeRepository.findAllByUserId(ownerId);
     }
 
-    public void saveHome(Home home) {
-        homeRepository.save(home);
+    public List<Home> getByUserPhone(String phone,Integer page,Integer size){
+        return homeRepository.findByUser_PhoneNumber(phone, PageRequest.of(page,size,Sort.by("createdDate").ascending())).getContent();
     }
 
+    public List<Home> searchHome(SearchDTO search) {
+        List<Home> found = new ArrayList<>();
+        for (Home home : homeRepository.findByActive(true)) {
+            if (search.getRegion() != null)
+                if (search.getRegion().equals(home.getRegion())) {
+                    if (search.getDistrict() != null)
+                        if (!search.getDistrict().equals(home.getDistrict()))
+                            continue;
+                } else continue;
+
+            if (search.getHomeType() != null)
+                if (!home.getHomeType().equals(search.getHomeType()))
+                    continue;
+            if (search.getStatus() != null)
+                if (!search.getStatus().equals(home.getStatus()))
+                    continue;
+            if (search.getNumberOfRooms() != -1)
+                if (search.getNumberOfRooms() != home.getNumberOfRooms())
+                    continue;
+            if (search.getMinPrice() != -1)
+                if (search.getMinPrice() > home.getPrice())
+                    continue;
+            if (search.getMaxPrice() != -1)
+                if (search.getMaxPrice() < home.getPrice())
+                    continue;
+            found.add(home);
+        }
+        return found;
+    }
 }

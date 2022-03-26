@@ -9,10 +9,7 @@ import uz.pdp.rentseekerlongpolling.util.enums.HomeStatus;
 import uz.pdp.rentseekerlongpolling.util.enums.HomeType;
 import uz.pdp.rentseekerlongpolling.util.enums.Region;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,6 +35,7 @@ public class Home extends BaseModel {
     @Enumerated(value = EnumType.STRING)
     District district;
 
+    @Column(columnDefinition = "text")
     String address;
 
     int numberOfRooms;
@@ -46,6 +44,7 @@ public class Home extends BaseModel {
 
     double price;
 
+    @Column(columnDefinition = "text")
     String description;
 
     long interests;
