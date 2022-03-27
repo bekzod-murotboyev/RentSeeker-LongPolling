@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -29,9 +30,12 @@ public abstract class BaseModel {
 
     protected boolean active = true;
 
+    @Column(updatable = false)
     @CreationTimestamp
     LocalDateTime createdDate;
 
-    @LastModifiedDate
+    @UpdateTimestamp
     LocalDateTime updatedDate;
+
+
 }

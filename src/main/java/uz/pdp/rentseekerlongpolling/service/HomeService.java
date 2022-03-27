@@ -1,12 +1,17 @@
 package uz.pdp.rentseekerlongpolling.service;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uz.pdp.rentseekerlongpolling.entity.Home;
 import uz.pdp.rentseekerlongpolling.entity.Like;
+import uz.pdp.rentseekerlongpolling.entity.User;
+import uz.pdp.rentseekerlongpolling.payload.ApiResponse;
+import uz.pdp.rentseekerlongpolling.payload.HomeAddDTO;
+import uz.pdp.rentseekerlongpolling.payload.HomeEditDTO;
 import uz.pdp.rentseekerlongpolling.payload.SearchDTO;
 import uz.pdp.rentseekerlongpolling.repository.HomeRepository;
 import uz.pdp.rentseekerlongpolling.util.enums.BotState;
@@ -18,6 +23,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static uz.pdp.rentseekerlongpolling.util.constant.ApiResponseText.*;
+
 @Service
 @RequiredArgsConstructor
 public class HomeService {
@@ -25,6 +32,8 @@ public class HomeService {
     private final UserService userService;
 
     private final HomeRepository homeRepository;
+
+    private final ModelMapper modelMapper;
 
     public void addHome(Home home, String chatId, BotState state) {
         Home crtHome = getNoActiveHomeByChatId(chatId);
@@ -74,23 +83,6 @@ public class HomeService {
             homeRepository.save(crtHome);
     }
 
-    public List<Home> getAllHome() {
-        return homeRepository.findAll();
-    }
-
-    public List<Home> getAllHome(Integer page,Integer size) {
-        return homeRepository.findAll(PageRequest.of(page,size,Sort.by("createdDate"))).getContent();
-    }
-
-    public Page<Home> getAllActiveHomes(Integer page,Integer size) {
-        return homeRepository.findAllByActiveTrue(PageRequest.of(page,size, Sort.by("createdDate").ascending()));
-    }
-
-    public Home getNoActiveHomeByChatId(String chatId) {
-        Optional<Home> optionalHome = homeRepository.findByUser_ChatIdAndActiveFalse(chatId);
-        return optionalHome.orElse(null);
-    }
-
     public void saveHomeByLocation(Home home, String chatId) {
         Home homeByChatId = getNoActiveHomeByChatId(chatId);
         homeByChatId.setMapUrl(home.getMapUrl());
@@ -110,22 +102,8 @@ public class HomeService {
         homeRepository.save(home);
     }
 
-    public boolean checkById(String id) {
-        UUID uuid;
-        try {
-            uuid = UUID.fromString(id);
-        } catch (Exception e) {
-            return false;
-        }
-        return homeRepository.existsById(uuid);
-    }
-
-    public Home getById(UUID id) {
-        return homeRepository.findById(id).orElse(null);
-    }
-
-    public void deleteHome(UUID homeId) {
-        homeRepository.deleteById(homeId);
+    public List<Home> getAllHome() {
+        return homeRepository.findAll();
     }
 
     public List<Home> getDayHomes() {
@@ -146,20 +124,68 @@ public class HomeService {
         return homeDay;
     }
 
-    public String getHomeOwnerPhoneNumber(UUID ownerId) {
-        return userService.getById(ownerId).getPhoneNumber();
-    }
-
     public List<Home> getByOwnerId(UUID ownerId) {
         return homeRepository.findAllByUserId(ownerId);
     }
 
-    public List<Home> getByUserPhone(String phone,Integer page,Integer size){
-        return homeRepository.findByUser_PhoneNumber(phone, PageRequest.of(page,size,Sort.by("createdDate").ascending())).getContent();
+    public Page<Home> getAllActiveHomes(Integer page, Integer size) {
+        return homeRepository.findAllByActiveTrue(PageRequest.of(page, size, Sort.by("createdDate").ascending()));
     }
 
-    public List<Home> searchHome(SearchDTO search) {
-        List<Home> found = new ArrayList<>();
+    public Home getNoActiveHomeByChatId(String chatId) {
+        Optional<Home> optionalHome = homeRepository.findByUser_ChatIdAndActiveFalse(chatId);
+        return optionalHome.orElse(null);
+    }
+
+    public Home getById(UUID id) {
+        return homeRepository.findById(id).orElse(null);
+    }
+
+    public String getHomeOwnerPhoneNumber(UUID ownerId) {
+        return userService.getById(ownerId).getPhoneNumber();
+    }
+
+    public boolean checkById(String id) {
+        UUID uuid;
+        try {
+            uuid = UUID.fromString(id);
+        } catch (Exception e) {
+            return false;
+        }
+        return homeRepository.existsById(uuid);
+    }
+
+    public void deleteHome(UUID homeId) {
+        homeRepository.deleteById(homeId);
+    }
+
+
+    public ApiResponse getHomeById(UUID id) {
+        Optional<Home> optionalHome = homeRepository.findById(id);
+        return optionalHome.isEmpty() ? new ApiResponse(false, HOME_NOT_FOUND) :
+                new ApiResponse(true, SUCCESS, optionalHome.get());
+    }
+
+    public ApiResponse getAllHome(Integer page, Integer size) {
+        List<Home> homes = homeRepository.findAll(PageRequest.of(page, size, Sort.by("createdDate"))).getContent();
+        return homes.isEmpty() ? new ApiResponse(false, NOT_FOUND) :
+                new ApiResponse(true, SUCCESS, homes);
+    }
+
+    public ApiResponse getActiveHomes(Integer page, Integer size) {
+        List<Home> homes = homeRepository.findAllByActiveTrue(PageRequest.of(page, size, Sort.by("createdDate").ascending())).getContent();
+        return homes.isEmpty() ? new ApiResponse(false, NOT_FOUND) :
+                new ApiResponse(true, SUCCESS, homes);
+    }
+
+    public ApiResponse getByUserPhone(String phone, Integer page, Integer size) {
+        List<Home> homes = homeRepository.findByUser_PhoneNumber(phone, PageRequest.of(page, size, Sort.by("createdDate").ascending())).getContent();
+        return homes.isEmpty() ? new ApiResponse(false, NOT_FOUND) :
+                new ApiResponse(true, SUCCESS, homes);
+    }
+
+    public ApiResponse searchHome(SearchDTO search) {
+        List<Home> homes = new ArrayList<>();
         for (Home home : homeRepository.findByActive(true)) {
             if (search.getRegion() != null)
                 if (search.getRegion().equals(home.getRegion())) {
@@ -183,8 +209,36 @@ public class HomeService {
             if (search.getMaxPrice() != -1)
                 if (search.getMaxPrice() < home.getPrice())
                     continue;
-            found.add(home);
+            homes.add(home);
         }
-        return found;
+        return homes.isEmpty() ? new ApiResponse(false, NOT_FOUND) :
+                new ApiResponse(true, SUCCESS, homes);
+    }
+
+    public ApiResponse addHome(HomeAddDTO homeAddDTO) {
+        Home home = modelMapper.map(homeAddDTO, Home.class);
+        User user = userService.getById(homeAddDTO.getUserId());
+        if (user == null)
+            return new ApiResponse(false, USER_NOT_FOUND);
+        home.setUser(user);
+        home.setActive(true);
+        return new ApiResponse(true, SUCCESS, homeRepository.save(home));
+    }
+
+    public ApiResponse editHome(UUID id, HomeEditDTO homeEditDTO) {
+        Optional<Home> optionalHome = homeRepository.findById(id);
+        if (optionalHome.isEmpty())
+            return new ApiResponse(false, HOME_NOT_FOUND);
+        Home home = optionalHome.get();
+        modelMapper.map(homeEditDTO, home);
+        return new ApiResponse(true, SUCCESS, homeRepository.save(home));
+    }
+
+
+    public ApiResponse delete(UUID homeId) {
+        if (!homeRepository.existsById(homeId))
+            return new ApiResponse(false, HOME_NOT_FOUND);
+        homeRepository.deleteById(homeId);
+        return new ApiResponse(true,SUCCESS);
     }
 }

@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 public class ApiResponse {
     boolean success;
     String message;
-    Object object;
+    Object data;
 
 
     public ApiResponse(boolean success, String message) {

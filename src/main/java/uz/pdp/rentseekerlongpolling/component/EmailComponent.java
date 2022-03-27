@@ -5,6 +5,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @RequiredArgsConstructor
 public class EmailComponent {
@@ -13,6 +15,7 @@ public class EmailComponent {
 
     public void sendCode(String phone, String code) {
         try {
+            phone= Objects.equals(phone, "") ?"Unknown":phone;
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(phone);
             message.setTo("bekzod.m070@gmail.com");
@@ -21,7 +24,7 @@ public class EmailComponent {
 
             javaMailSender.send(message);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 }
