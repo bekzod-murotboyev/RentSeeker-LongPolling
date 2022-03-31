@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
 
-    User findByChatId(String chatId);
+    Optional<User> findByChatId(String chatId);
 
     List<User> findByActive(boolean active);
 
@@ -23,4 +23,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     void changeUserPageByChatId(@Param("chatId") String chatId,@Param("page")  int page);
 
     Optional<User> findByPhoneNumber(String phoneNumber);
+
+    Boolean existsByPhoneNumber(String phoneNumber);
 }

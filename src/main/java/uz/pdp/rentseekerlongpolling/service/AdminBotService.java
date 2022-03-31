@@ -14,6 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import uz.pdp.rentseekerlongpolling.entity.Home;
 import uz.pdp.rentseekerlongpolling.entity.User;
 import uz.pdp.rentseekerlongpolling.util.constant.Constant;
+import uz.pdp.rentseekerlongpolling.util.enums.BotState;
 import uz.pdp.rentseekerlongpolling.util.enums.HomeStatus;
 import uz.pdp.rentseekerlongpolling.util.enums.HomeType;
 import uz.pdp.rentseekerlongpolling.util.enums.Language;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static uz.pdp.rentseekerlongpolling.util.Url.*;
+import static uz.pdp.rentseekerlongpolling.util.enums.BotState.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +38,7 @@ public class AdminBotService extends LanguageService implements Constant {
 
     public EditMessageText setAdminMenuEdit(Update update, Language lan) {
         Message message = update.hasMessage() ? update.getMessage() : update.getCallbackQuery().getMessage();
-        InlineKeyboardMarkup markup = InlineKeyboardService.createMarkup(List.of(
+        InlineKeyboardMarkup markup = KeyboardService.createInlineMarkup(List.of(
                 List.of(ADMIN_SHOW_USERS, ADMIN_SHOW_HOMES),
                 List.of(BACK_TO_ADMIN_MENU)
         ), lan);
@@ -50,7 +52,7 @@ public class AdminBotService extends LanguageService implements Constant {
 
     public SendMessage setAdminMenuSend(Update update, Language lan) {
         Message message = update.hasMessage() ? update.getMessage() : update.getCallbackQuery().getMessage();
-        InlineKeyboardMarkup markup = InlineKeyboardService.createMarkup(List.of(
+        InlineKeyboardMarkup markup = KeyboardService.createInlineMarkup(List.of(
                 List.of(ADMIN_SHOW_USERS, ADMIN_SHOW_HOMES)), lan);
         SendMessage sendMessage = new SendMessage(message.getChatId().toString(), getWord(ADMIN_USERS_SHOW_MENU_TEXT, lan));
         sendMessage.setChatId(message.getChatId().toString());
@@ -60,7 +62,7 @@ public class AdminBotService extends LanguageService implements Constant {
 
     public EditMessageText setAdminShowUsersEdit(Update update, Language lan) {
         Message message = update.hasMessage() ? update.getMessage() : update.getCallbackQuery().getMessage();
-        InlineKeyboardMarkup markup = InlineKeyboardService.createMarkup(List.of(
+        InlineKeyboardMarkup markup = KeyboardService.createInlineMarkup(List.of(
                 List.of(ADMIN_EXCEL_FILE, SEARCH),
                 List.of(BACK_TO_ADMIN_MAIN_MENU)), lan);
         EditMessageText editMessageText = new EditMessageText();
@@ -73,7 +75,7 @@ public class AdminBotService extends LanguageService implements Constant {
 
     public SendMessage setAdminShowUsersSend(Update update, Language lan) {
         Message message = update.hasMessage() ? update.getMessage() : update.getCallbackQuery().getMessage();
-        InlineKeyboardMarkup markup = InlineKeyboardService.createMarkup(List.of(
+        InlineKeyboardMarkup markup = KeyboardService.createInlineMarkup(List.of(
                 List.of(ADMIN_EXCEL_FILE, SEARCH),
                 List.of(BACK_TO_ADMIN_MAIN_MENU)), lan);
         SendMessage sendMessage = new SendMessage();
@@ -114,7 +116,7 @@ public class AdminBotService extends LanguageService implements Constant {
 
     public SendMessage setAdminChooseUsersSend(Update update, Language lan) {
         Message message = update.hasMessage() ? update.getMessage() : update.getCallbackQuery().getMessage();
-        InlineKeyboardMarkup markup = InlineKeyboardService.createMarkup(List.of(
+        InlineKeyboardMarkup markup = KeyboardService.createInlineMarkup(List.of(
                 List.of(ADMIN_ACTIVE_USERS, ADMIN_DEACTIVATED_USERS),
                 List.of(BACK_TO_ADMIN_USERS_SHOW)), lan);
         SendMessage sendMessage = new SendMessage(message.getChatId().toString(), getWord(ADMIN_CHOOSE_USERS_MENU_TEXT, lan));
@@ -125,28 +127,23 @@ public class AdminBotService extends LanguageService implements Constant {
 
     public EditMessageText setAdminUserEnterPhoneEdit(Update update, Language lan) {
         Message message = update.hasMessage() ? update.getMessage() : update.getCallbackQuery().getMessage();
-        EditMessageText editMessageText = new EditMessageText();
-        editMessageText.setText(getWord(ADMIN_ENTER_PHONE_NUMBER_MENU_TEXT, lan));
+        EditMessageText editMessageText = new EditMessageText(getWord(ADMIN_ENTER_PHONE_NUMBER_MENU_TEXT, lan));
         editMessageText.setChatId(message.getChatId().toString());
         editMessageText.setMessageId(message.getMessageId());
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        InlineKeyboardButton back = new InlineKeyboardButton(getWord(BACK, lan));
-        back.setCallbackData(BACK_TO_ADMIN_USERS_SHOW);
-        inlineKeyboardMarkup.setKeyboard(List.of(List.of(back)));
-        editMessageText.setReplyMarkup(inlineKeyboardMarkup);
+        editMessageText.setReplyMarkup(KeyboardService.createInlineMarkup(List.of(List.of(BACK_TO_ADMIN_USERS_SHOW)),lan));
         return editMessageText;
     }
 
     public SendMessage setAdminUserEnterPhoneNumberSend(Update update, Language lan) {
         Message message = update.hasMessage() ? update.getMessage() : update.getCallbackQuery().getMessage();
         SendMessage sendMessage = new SendMessage(message.getChatId().toString(), getWord(ADMIN_ENTER_PHONE_NUMBER_MENU_TEXT, lan));
-        sendMessage.setChatId(message.getChatId().toString());
+        sendMessage.setReplyMarkup(KeyboardService.createInlineMarkup(List.of(List.of(BACK_TO_ADMIN_USERS_SHOW)),lan));
         return sendMessage;
     }
 
     public EditMessageText setAdminHomeFilterEdit(Update update, Language lan) {
         Message message = update.hasMessage() ? update.getMessage() : update.getCallbackQuery().getMessage();
-        InlineKeyboardMarkup markup = InlineKeyboardService.createMarkup(List.of(
+        InlineKeyboardMarkup markup = KeyboardService.createInlineMarkup(List.of(
                 List.of(ADMIN_HOMES_IN_WEEK, ADMIN_HOMES_IN_DAY),
                 List.of(BACK_TO_ADMIN_MAIN_MENU)), lan);
         EditMessageText editMessageText = new EditMessageText();
@@ -159,7 +156,7 @@ public class AdminBotService extends LanguageService implements Constant {
 
     public SendMessage setAdminHomeFilterSend(Update update, Language lan) {
         Message message = update.hasMessage() ? update.getMessage() : update.getCallbackQuery().getMessage();
-        InlineKeyboardMarkup markup = InlineKeyboardService.createMarkup(List.of(
+        InlineKeyboardMarkup markup = KeyboardService.createInlineMarkup(List.of(
                 List.of(ADMIN_HOMES_IN_WEEK, ADMIN_HOMES_IN_DAY),
                 List.of(BACK_TO_ADMIN_MAIN_MENU)), lan);
         SendMessage sendMessage = new SendMessage(message.getChatId().toString(), getWord(ADMIN_HOMES_FILTER_MENU_TEXT, lan));
@@ -213,11 +210,12 @@ public class AdminBotService extends LanguageService implements Constant {
             rowList.add(row1);
             rowList.add(row2);
 
-            sendPhoto = new SendPhoto(message.getChatId().toString(),new InputFile(home.getFileId()));
+            sendPhoto = new SendPhoto(message.getChatId().toString(),new InputFile(home.getAttachments().get(0).getFileId()));
             sendPhoto.setCaption(getCaptionByHome(home, lan));
 
             InlineKeyboardButton banButton = new InlineKeyboardButton(DELETE);
             banButton.setCallbackData(home.getId().toString());
+            row1.add(KeyboardService.getInlineButton(PHOTOS+home.getId(), getWord(HOME_PHOTOS,lan)));
             row1.add(banButton);
             sendPhoto.setReplyMarkup(markup);
         }
@@ -288,6 +286,17 @@ public class AdminBotService extends LanguageService implements Constant {
         deleteMessage.setMessageId(message.getMessageId());
         deleteMessage.setChatId(message.getChatId().toString());
         return deleteMessage;
+    }
+
+    public BotState getState(Update update,BotState state){
+        String data = update.getCallbackQuery().getData();
+        if (!data.equals(BACK_TO_ADMIN_USERS_SHOW) && state == ADMIN_SEARCH_USER_INFO_SEND) {
+            return ADMIN_SEARCH_USER_INFO_EDIT;
+        }else if(data.startsWith(PHOTOS)){
+            update.getCallbackQuery().setData(data.substring(PHOTOS.length()));
+            return SHOW_HOME_PHOTOS;
+        }
+        return BotState.ERROR;
     }
 
 

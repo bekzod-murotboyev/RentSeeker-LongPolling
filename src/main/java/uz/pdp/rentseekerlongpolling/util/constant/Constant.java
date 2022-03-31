@@ -201,6 +201,9 @@ public interface Constant {
     String SKIP_UZ="\uD83C\uDFCE O'tkazib yuborish";
     String PREV=" < ";
     String NEXT=" > ";
+    String NEXT_ACTION="▶️ Next";
+    String NEXT_ACTION_RU="▶️ Следующий";
+    String NEXT_ACTION_UZ="▶️ Keyingisi";
 
 
     String CHOOSE_DISTRICT_MENU_TEXT = "Choose district...";
@@ -227,9 +230,9 @@ public interface Constant {
     String ENTER_AREA_MENU_TEXT_RU = "Введите размер площади(m^2)...";
     String ENTER_AREA_MENU_TEXT_UZ = "Maydoni hajmini kiriting(m^2)...";
 
-    String SEND_PHOTO_MENU_TEXT = "Send photo of home(only one)...";
-    String SEND_PHOTO_MENU_TEXT_RU = "Отправте фото квартиры(только одну)...";
-    String SEND_PHOTO_MENU_TEXT_UZ = "Uy rasmini jonating(faqat bitta)...";
+    String SEND_PHOTO_MENU_TEXT = "Send photos of home...";
+    String SEND_PHOTO_MENU_TEXT_RU = "Отправте фотографии квартиры...";
+    String SEND_PHOTO_MENU_TEXT_UZ = "Uy rasmlarini jo'nating...";
 
     String ENTER_PRICE_MENU_TEXT = "Enter price($)...";
     String ENTER_PRICE_MENU_TEXT_RU = "Введите цену($)...";
@@ -423,6 +426,10 @@ public interface Constant {
     String MY_FAVOURITES_RU = "♥️ Мои избранные";
     String MY_FAVOURITES_UZ = "♥ Sevimlilarim";
 
+    String HOME_PHOTOS="\uD83C\uDF03 Images";
+    String HOME_PHOTOS_RU="\uD83C\uDF03 Картинки";
+    String HOME_PHOTOS_UZ="\uD83C\uDF03 Rasmlar";
+
     //SEARCH
 
     String SEARCH_BY_ROOMS = "\uD83D\uDEAASearch by number of rooms";
@@ -481,11 +488,26 @@ public interface Constant {
     String REGISTER_WARNING_TEXT_RU="Прежде всего вам необходимо зарегистрироваться в разделе настроек!";
     String REGISTER_WARNING_TEXT_UZ="Birinchi navbatda  sozlamalar bo'limidan registratsiyadan o'tishingiz kerak!";
 
+    String IT_HAS_ONLY_ONE_PIC="This home has only one picture!";
+    String IT_HAS_ONLY_ONE_PIC_RU="У этого дома только одна фотография!";
+    String IT_HAS_ONLY_ONE_PIC_UZ="Bu uyda faqat bitta rasm bor!";
+
+    String FIRST_PAGE_NOTIFICATION="You are on the first page!";
+    String FIRST_PAGE_NOTIFICATION_RU="Вы находитесь на первой странице!";
+    String FIRST_PAGE_NOTIFICATION_UZ="Siz birinchi sahifadasiz!";
+
+    String LAST_PAGE_NOTIFICATION="You are on the last page!";
+    String LAST_PAGE_NOTIFICATION_RU="Вы находитесь на последней странице!";
+    String LAST_PAGE_NOTIFICATION_UZ="Siz oxirgi sahifadasiz!";
+
     String BAN_MENU_TEXT="You have been blocked by the admin for some reason!";
     String BAN_MENU_TEXT_RU="Вы были заблокированы администратором по какой-то причине!";
     String BAN_MENU_TEXT_UZ="Ba'zi sabablarga ko'ra admin tomonidan taqiqlangansiz!";
 
     String ERROR="❗️ ❗️ ❗️";
+    String PHONE="PHONE";
+    String PHOTOS="PHOTOS";
+    String LIKE="LIKE";
 
 
     //BACK_STATES

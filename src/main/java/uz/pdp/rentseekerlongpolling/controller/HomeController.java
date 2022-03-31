@@ -52,6 +52,12 @@ public class HomeController {
         return ResponseEntity.status(response.isSuccess() ? OK : NOT_FOUND).body(response);
     }
 
+    @GetMapping("/inactive")
+    public ResponseEntity<?> getByUserInactiveHome(@RequestParam UUID userId) {
+        ApiResponse response = homeService.getNoActiveHomeByUserId(userId);
+        return ResponseEntity.status(response.isSuccess() ? OK : NOT_FOUND).body(response);
+    }
+
     @PostMapping
     public ResponseEntity<?> addHome(@Valid @RequestBody HomeAddDTO homeAddDTO) {
         ApiResponse response = homeService.addHome(homeAddDTO);

@@ -22,48 +22,49 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public  ApiResponse getUsers(boolean active) {
+    public ApiResponse getUsers(boolean active) {
         List<User> userList = userRepository.findByActive(active);
-        return userList.isEmpty()?new ApiResponse(false,"NOT FOUND"):
-                new ApiResponse(true,"SUCCESS",userList);
+        return userList.isEmpty() ? new ApiResponse(false, "NOT FOUND") :
+                new ApiResponse(true, "SUCCESS", userList);
     }
 
 
     public LanStateDTO getAndCheck(Update update) {
         Message message = update.hasMessage() ? update.getMessage() : update.getCallbackQuery().getMessage();
         String chatId = message.getChatId().toString();
-        User user = userRepository.findByChatId(chatId);
-        if (user == null) {
+        Optional<User> optionalUser = userRepository.findByChatId(chatId);
+        User user;
+        if (optionalUser.isEmpty()) {
             var from = message.getFrom();
             user = new User(from.getFirstName(), "", from.getUserName(),
                     chatId, Language.RU, BotState.CHOOSE_LANGUAGE, Role.USER, false);
             userRepository.save(user);
-        }
-
-        return new LanStateDTO(user.getLanguage(), user.getState(), user.getRole(), user.isAdmin(),user.isActive());
+        } else user = optionalUser.get();
+        return new LanStateDTO(user.getLanguage(), user.getState(), user.getRole(), user.isAdmin(), user.isActive());
     }
 
     public void saveStateAndLan(Update update, LanStateDTO lanStateDTO) {
         Message message = update.hasMessage() ? update.getMessage() : update.getCallbackQuery().getMessage();
         String chatId = message.getChatId().toString();
-        User user = userRepository.findByChatId(chatId);
-        user.setState(lanStateDTO.getState());
-        user.setLanguage(lanStateDTO.getLanguage());
-        user.setRole(lanStateDTO.getRole());
-        user.setAdmin(lanStateDTO.isAdmin());
-        userRepository.save(user);
-
+        Optional<User> optionalUser = userRepository.findByChatId(chatId);
+        optionalUser.ifPresent(item -> {
+            item.setState(lanStateDTO.getState());
+            item.setLanguage(lanStateDTO.getLanguage());
+            item.setRole(lanStateDTO.getRole());
+            item.setAdmin(lanStateDTO.isAdmin());
+            userRepository.save(item);
+        });
     }
 
     public User getByChatId(String chatId) {
-        return userRepository.findByChatId(chatId);
+        return userRepository.findByChatId(chatId).orElse(null);
     }
 
     public void savePhoneNumber(String phoneNumber, String chatId) {
-        phoneNumber = phoneNumber.startsWith("+") ? phoneNumber : "+" + phoneNumber;
-        User user = userRepository.findByChatId(chatId);
-        user.setPhoneNumber(phoneNumber);
-        userRepository.save(user);
+        userRepository.findByChatId(chatId).ifPresent(user -> {
+            user.setPhoneNumber(phoneNumber);
+            userRepository.save(user);
+        });
     }
 
     public boolean phoneNumberValidation(String phone) {
@@ -77,10 +78,7 @@ public class UserService {
     }
 
     public boolean checkByPhoneNumber(String number) {
-        for (User user : userRepository.findAll())
-            if (user.getPhoneNumber() != null && user.getPhoneNumber().equals(number))
-                return true;
-        return false;
+        return userRepository.existsByPhoneNumber(number);
     }
 
     public User getById(UUID id) {
@@ -104,17 +102,18 @@ public class UserService {
 
 
     public void changeIsAdmin(String chatId, boolean isAdmin) {
-        User user = userRepository.findByChatId(chatId);
-        user.setAdmin(isAdmin);
-        userRepository.save(user);
+        userRepository.findByChatId(chatId).ifPresent(user -> {
+            user.setAdmin(isAdmin);
+            userRepository.save(user);
+        });
     }
 
-    public User save(User user){
+    public User save(User user) {
         return userRepository.save(user);
     }
 
-    public void changeUserPageByChatId(String chatId,int page){
-        userRepository.changeUserPageByChatId(chatId,page);
+    public void changeUserPageByChatId(String chatId, int page) {
+        userRepository.changeUserPageByChatId(chatId, page);
     }
 
 }

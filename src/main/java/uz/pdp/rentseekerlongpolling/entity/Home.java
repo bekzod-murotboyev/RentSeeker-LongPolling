@@ -10,18 +10,21 @@ import uz.pdp.rentseekerlongpolling.util.enums.HomeType;
 import uz.pdp.rentseekerlongpolling.util.enums.Region;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 public class Home extends BaseModel {
 
     @ManyToOne
     User user;
+
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    List<Attachment> attachments;
 
     @Enumerated(value = EnumType.STRING)
     HomeStatus status;
@@ -50,10 +53,6 @@ public class Home extends BaseModel {
     long interests;
 
     String mapUrl;
-
-    String fileId;
-
-    int fileSize;
 
     boolean ban;
 

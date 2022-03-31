@@ -8,7 +8,7 @@
       <jdbc-url>jdbc:mysql://rent-seeker.cdgdbfweslzx.us-east-1.rds.amazonaws.com:3306/rent_seeker</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="rent_seeker@localhost" uuid="698f5148-b648-467b-a704-ac532376e96d">
+    <data-source source="LOCAL" name="rent_seeker@localhost" uuid="eb1245a2-7160-4fc4-afd0-7747c4442503">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>

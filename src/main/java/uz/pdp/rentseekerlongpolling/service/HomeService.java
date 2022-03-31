@@ -13,6 +13,7 @@ import uz.pdp.rentseekerlongpolling.payload.ApiResponse;
 import uz.pdp.rentseekerlongpolling.payload.HomeAddDTO;
 import uz.pdp.rentseekerlongpolling.payload.HomeEditDTO;
 import uz.pdp.rentseekerlongpolling.payload.SearchDTO;
+import uz.pdp.rentseekerlongpolling.repository.AttachmentRepository;
 import uz.pdp.rentseekerlongpolling.repository.HomeRepository;
 import uz.pdp.rentseekerlongpolling.util.enums.BotState;
 
@@ -34,6 +35,8 @@ public class HomeService {
     private final HomeRepository homeRepository;
 
     private final ModelMapper modelMapper;
+
+    private final AttachmentRepository attachmentRepository;
 
     public void addHome(Home home, String chatId, BotState state) {
         Home crtHome = getNoActiveHomeByChatId(chatId);
@@ -65,9 +68,11 @@ public class HomeService {
             case GIVE_HOME_PHOTO_SEND:
                 crtHome.setArea(home.getArea());
                 break;
-            case GIVE_HOME_PRICE_SEND: {
-                crtHome.setFileSize(home.getFileSize());
-                crtHome.setFileId(home.getFileId());
+            case GIVE_HOME_PHOTO_SEND_AGAIN: {
+                if (crtHome.getAttachments().isEmpty())
+                    crtHome.setAttachments(home.getAttachments());
+                else
+                    crtHome.getAttachments().addAll(home.getAttachments());
             }
             break;
             case GIVE_HOME_DESCRIPTION:
@@ -135,6 +140,12 @@ public class HomeService {
     public Home getNoActiveHomeByChatId(String chatId) {
         Optional<Home> optionalHome = homeRepository.findByUser_ChatIdAndActiveFalse(chatId);
         return optionalHome.orElse(null);
+    }
+
+    public ApiResponse getNoActiveHomeByUserId(UUID userId) {
+        Optional<Home> optionalHome = homeRepository.findByUserIdAndActiveFalse(userId);
+        return optionalHome.isEmpty() ? new ApiResponse(false, HOME_NOT_FOUND) :
+                new ApiResponse(true, SUCCESS, optionalHome.get());
     }
 
     public Home getById(UUID id) {
@@ -239,6 +250,14 @@ public class HomeService {
         if (!homeRepository.existsById(homeId))
             return new ApiResponse(false, HOME_NOT_FOUND);
         homeRepository.deleteById(homeId);
-        return new ApiResponse(true,SUCCESS);
+        return new ApiResponse(true, SUCCESS);
+    }
+
+    public void deleteHomeAttachment(String chatId) {
+        Optional<Home> optionalHome = homeRepository.findByUser_ChatIdAndActiveFalse(chatId);
+        optionalHome.ifPresent(home-> {
+            home.setAttachments(null);
+            homeRepository.save(home);
+        });
     }
 }

@@ -18,7 +18,7 @@ Security - > Spring Security / JWT
 
 After running the application, just type the  [local url for Swagger UI](http://rent-seeker.us-east-1.elasticbeanstalk.com/swagger-ui/index.html) in your browser.
 
-[//]: # (After running the application, just type the  [local url for Swagger UI]&#40;http://localhost:8080/swagger-ui/index.html&#41; in your browser.)
+After running the application, just type the  [local url for Swagger UI](http://localhost:8080/swagger-ui/index.html) in your browser.
 
 
 

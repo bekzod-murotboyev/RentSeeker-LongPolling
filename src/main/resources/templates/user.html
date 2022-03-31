@@ -25,7 +25,7 @@
                     </tr>
                 </div>
                 <tbody>
-                <tr th:each="user,count: ${response.getObject()}">
+                <tr th:each="user,count: ${response.getData()}">
                     <td th:text="${count.count}"></td>
                     <td th:text="${user.chatId}"></td>
                     <td th:text="${user.name}"></td>

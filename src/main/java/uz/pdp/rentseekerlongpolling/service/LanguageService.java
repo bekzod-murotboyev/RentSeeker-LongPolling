@@ -231,6 +231,11 @@ public class LanguageService implements Constant {
             case CHECK_USER_BY_ADMIN_TEXT:
                 return CHECK_USER_BY_ADMIN_TEXT_UZ;
             case BAN_MENU_TEXT:return BAN_MENU_TEXT_UZ;
+            case NEXT_ACTION:return NEXT_ACTION_UZ;
+            case HOME_PHOTOS:return HOME_PHOTOS_UZ;
+            case IT_HAS_ONLY_ONE_PIC:return IT_HAS_ONLY_ONE_PIC_UZ;
+            case FIRST_PAGE_NOTIFICATION:return FIRST_PAGE_NOTIFICATION_UZ;
+            case LAST_PAGE_NOTIFICATION:return LAST_PAGE_NOTIFICATION_UZ;
 
 
             case TASHKENT:
@@ -819,6 +824,12 @@ public class LanguageService implements Constant {
             case CHECK_USER_BY_ADMIN_TEXT:
                 return CHECK_USER_BY_ADMIN_TEXT_RU;
             case BAN_MENU_TEXT:return BAN_MENU_TEXT_RU;
+            case NEXT_ACTION:return NEXT_ACTION_RU;
+            case HOME_PHOTOS:return HOME_PHOTOS_RU;
+            case IT_HAS_ONLY_ONE_PIC:return IT_HAS_ONLY_ONE_PIC_RU;
+
+            case FIRST_PAGE_NOTIFICATION:return FIRST_PAGE_NOTIFICATION_RU;
+            case LAST_PAGE_NOTIFICATION:return LAST_PAGE_NOTIFICATION_RU;
 
 
             case TASHKENT:
@@ -1404,6 +1415,11 @@ public class LanguageService implements Constant {
                 return DE_ACTIVE;
             case CHECK_USER_BY_ADMIN_TEXT:
                 return CHECK_USER_BY_ADMIN_TEXT;
+            case NEXT_ACTION:return NEXT_ACTION;
+            case HOME_PHOTOS:return HOME_PHOTOS;
+            case IT_HAS_ONLY_ONE_PIC:return IT_HAS_ONLY_ONE_PIC;
+            case FIRST_PAGE_NOTIFICATION:return FIRST_PAGE_NOTIFICATION;
+            case LAST_PAGE_NOTIFICATION:return LAST_PAGE_NOTIFICATION;
 
             case TASHKENT:
                 return Region.TASHKENT.getEng();

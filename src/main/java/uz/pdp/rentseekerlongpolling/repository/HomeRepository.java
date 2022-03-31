@@ -17,6 +17,8 @@ public interface HomeRepository extends JpaRepository<Home, UUID> {
 
     Optional<Home> findByUser_ChatIdAndActiveFalse(String user_chatId);
 
+    Optional<Home> findByUserIdAndActiveFalse(UUID userId);
+
     Page<Home> findAllByActiveTrue(Pageable pageable);
 
     List<Home> findByActive(boolean active);
