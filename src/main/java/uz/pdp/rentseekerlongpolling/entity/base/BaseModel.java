@@ -19,13 +19,13 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @MappedSuperclass
 public abstract class BaseModel {
-//    @Id
+//    @Id // it works with Mysql
 //    @GeneratedValue(generator = "uuid2")
 //    @GenericGenerator(name = "uuid2", strategy = "uuid2")
 //    @Column(columnDefinition = "BINARY(16)")
 //    private UUID id;
 
-    @Id
+    @Id //it works with Postgresql
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
     @Column(length = 36, nullable = false, updatable = false)

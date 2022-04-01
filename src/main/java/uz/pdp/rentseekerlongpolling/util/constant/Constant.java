@@ -12,6 +12,8 @@ public interface Constant {
     String USER_RU="\uD83E\uDDE2 Пользователь";
     String USER_UZ="\uD83E\uDDE2 User";
 
+
+
     String ADMIN_USERS_SHOW_MENU_TEXT = "Choose option...";
     String ADMIN_USERS_SHOW_MENU_TEXT_RU = "Выберите вариант...";
     String ADMIN_USERS_SHOW_MENU_TEXT_UZ = "Variantni tanlang...";

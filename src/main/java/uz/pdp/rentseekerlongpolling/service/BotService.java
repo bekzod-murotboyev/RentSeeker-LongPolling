@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 
 import static uz.pdp.rentseekerlongpolling.service.LanguageService.getWord;
 import static uz.pdp.rentseekerlongpolling.util.constant.Constant.*;
+import static uz.pdp.rentseekerlongpolling.util.enums.BotState.MAIN_MENU_EDIT;
 import static uz.pdp.rentseekerlongpolling.util.enums.BotState.SHOW_HOME_PHONE_MENU_ALL;
 
 
@@ -63,7 +64,7 @@ public class BotService {
     private final ModelMapper modelMapper;
 
 
-    public AnswerCallbackQuery getAnswerCallbackQuery(CallbackQuery query,String text,Language lan){
+    public AnswerCallbackQuery getAnswerCallbackQuery(CallbackQuery query, String text, Language lan) {
         AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery(query.getId());
         answerCallbackQuery.setText(getWord(text, lan));
         answerCallbackQuery.setShowAlert(true);
@@ -71,11 +72,11 @@ public class BotService {
     }
 
     public AnswerCallbackQuery setWarningRegister(Update update, Language lan) {
-        return getAnswerCallbackQuery(update.getCallbackQuery(),REGISTER_WARNING_TEXT,lan);
+        return getAnswerCallbackQuery(update.getCallbackQuery(), REGISTER_WARNING_TEXT, lan);
     }
 
     public AnswerCallbackQuery itHasOnlyOnePic(Update update, Language lan) {
-        return getAnswerCallbackQuery(update.getCallbackQuery(),IT_HAS_ONLY_ONE_PIC,lan);
+        return getAnswerCallbackQuery(update.getCallbackQuery(), IT_HAS_ONLY_ONE_PIC, lan);
     }
 
 
@@ -293,7 +294,6 @@ public class BotService {
         editMessageText.setMessageId(message.getMessageId());
         return editMessageText;
     }
-
 
 
     public EditMessageText setWriteOrSendLocationMenuEdit(Update update, Language lan) {
@@ -916,16 +916,16 @@ public class BotService {
         String data = query.getData();
         User user = userService.getByChatId(message.getChatId().toString());
         int page = user.getCrtPage() + (data.equals(PREV) ? -1 : data.startsWith(NEXT) ? 1 : 0);
-        if (page < 0) return new HomePageableDTO(null,FIRST_PAGE_NOTIFICATION);
+        if (page < 0) return new HomePageableDTO(null, FIRST_PAGE_NOTIFICATION);
         Page<Home> allHome = homeService.getAllActiveHomes(page, pageableSize);
         if (allHome.isEmpty()) {
-            return new HomePageableDTO(null,page==0?null:LAST_PAGE_NOTIFICATION);
+            return new HomePageableDTO(null, page == 0 ? null : LAST_PAGE_NOTIFICATION);
         } else if (user.getCrtPage() != page)
             userService.changeUserPageByChatId(user.getChatId(), page);
 
 
         List<SendPhoto> sendMessageList = new ArrayList<>();
-        SendPhoto sendPhoto= null;
+        SendPhoto sendPhoto = null;
         for (Home home : allHome) {
             if (sendPhoto != null)
                 sendMessageList.add(sendPhoto);
@@ -934,16 +934,16 @@ public class BotService {
             markup.setKeyboard(rowList);
             row1 = new ArrayList<>();
             rowList.add(row1);
-            sendPhoto = new SendPhoto(message.getChatId().toString(),new InputFile(home.getAttachments().get(0).getFileId()));
+            sendPhoto = new SendPhoto(message.getChatId().toString(), new InputFile(home.getAttachments().get(0).getFileId()));
             sendPhoto.setCaption(getCaptionByHome(home, lan));
             sendPhoto.setReplyMarkup(markup);
             Like like = likeService.getLikeByHomeIdAndUserId(home, user);
-            row1.add(KeyboardService.getInlineButton(PHONE+home.getId(),
-                            interestService.getVisible(home, user) ? userService.getById(home.getUser().getId()).getPhoneNumber()
-                                    : getWord(GET_PHONE_NUMBER, lan)));
-            row1.add(KeyboardService.getInlineButton(PHOTOS+home.getId(), getWord(HOME_PHOTOS,lan)));
+            row1.add(KeyboardService.getInlineButton(PHONE + home.getId(),
+                    interestService.getVisible(home, user) ? userService.getById(home.getUser().getId()).getPhoneNumber()
+                            : getWord(GET_PHONE_NUMBER, lan)));
+            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan)));
             row1.add(KeyboardService
-                    .getInlineButton(LIKE+like.getId(),
+                    .getInlineButton(LIKE + like.getId(),
                             home.getLikes()
                                     + " " + (like.isActive() ? LIKE_ACTIVE : LIKE_NOT_ACTIVE)));
 
@@ -955,28 +955,25 @@ public class BotService {
         row2.add(KeyboardService.getInlineButton(NEXT, NEXT));
         rowList.add(row2);
         sendMessageList.add(sendPhoto);
-        return new HomePageableDTO(sendMessageList,null);
+        return new HomePageableDTO(sendMessageList, null);
     }
 
-    public AnswerCallbackQuery homeNotFound(Update update, Language lan, String back) {
-//        InlineKeyboardButton backButton = new InlineKeyboardButton(getWord(BACK, lan));
-//        backButton.setCallbackData(back);
-//        InlineKeyboardButton menu = new InlineKeyboardButton(getWord(MENU, lan));
-//        menu.setCallbackData(back.endsWith("EDIT") ? BACK_TO_MAIN_MENU_EDIT : BACK_TO_MAIN_MENU_SEND);
-//        List<InlineKeyboardButton> buttonList = new ArrayList<>();
-//        buttonList.add(backButton);
-//        if (!back.equals(BACK_TO_ADMIN_HOMES_FILTER_EDIT))
-//            buttonList.add(menu);
-//        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-//        rowList.add(buttonList);
-//        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-//        inlineKeyboardMarkup.setKeyboard(rowList);
-//
-//        Message message = getMessage(update);
-//        SendMessage sendMessage = new SendMessage(message.getChatId().toString(), getWord(HOMES_NOT_FOUND, lan));
-//        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
-//        return sendMessage;
-        return getAnswerCallbackQuery(update.getCallbackQuery(),HOMES_NOT_FOUND,lan);
+    public AnswerCallbackQuery homeNotFound(Update update, Language lan) {
+        return getAnswerCallbackQuery(update.getCallbackQuery(), HOMES_NOT_FOUND, lan);
+    }
+
+    public SendMessage searchedHomeNotFound(Update update, Language lan) {
+        Message message = getMessage(update);
+        SendMessage sendMessage = new SendMessage(message.getChatId().toString(), getWord(HOMES_NOT_FOUND, lan));
+        sendMessage.setChatId(message.getChatId().toString());
+        sendMessage.setReplyMarkup(KeyboardService.createInlineMarkup(
+                List.of(List.of(
+                        BACK_TO_CHOOSE_MAX_PRICE_EDIT,
+                        MENU
+                )),
+                lan
+        ));
+        return sendMessage;
     }
 
     public EditMessageCaption changeVisibleHomePhone(Update update, Language lan, String backName, BotState state) {
@@ -995,13 +992,13 @@ public class BotService {
         Like like = likeService.getLikeByHomeIdAndUserId(home, user);
 
 
-        InlineKeyboardButton likeButton = KeyboardService.getInlineButton(LIKE+like.getId().toString(),
+        InlineKeyboardButton likeButton = KeyboardService.getInlineButton(LIKE + like.getId().toString(),
                 home.getLikes()
                         + " " + (like.isActive() ? LIKE_ACTIVE : LIKE_NOT_ACTIVE));
-        row1.add(KeyboardService.getInlineButton(PHONE+home.getId().toString(),
+        row1.add(KeyboardService.getInlineButton(PHONE + home.getId().toString(),
                 interestService.changeVisible(home, user) ?
                         userService.getById(home.getUser().getId()).getPhoneNumber() : getWord(GET_PHONE_NUMBER, lan)));
-        row1.add(KeyboardService.getInlineButton(PHOTOS+home.getId(), getWord(HOME_PHOTOS,lan)));
+        row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan)));
         row2.add(KeyboardService.getInlineButton(backName, getWord(BACK, lan)));
         row2.add(KeyboardService.getInlineButton(BACK_TO_MAIN_MENU_SEND, getWord(MENU, lan)));
 
@@ -1054,16 +1051,16 @@ public class BotService {
         rowList.add(row1);
         rowList.add(row2);
 
-        InlineKeyboardButton phoneButton = KeyboardService.getInlineButton(PHONE+home.getId().toString(), interestService.getVisible(home, user) ?
+        InlineKeyboardButton phoneButton = KeyboardService.getInlineButton(PHONE + home.getId().toString(), interestService.getVisible(home, user) ?
                 userService.getById(home.getUser().getId()).getPhoneNumber() : getWord(GET_PHONE_NUMBER, lan));
-        InlineKeyboardButton likeButton = KeyboardService.getInlineButton(LIKE+like.getId().toString(), home.getLikes()
+        InlineKeyboardButton likeButton = KeyboardService.getInlineButton(LIKE + like.getId().toString(), home.getLikes()
                 + " " + (like.isActive() ? LIKE_ACTIVE : LIKE_NOT_ACTIVE));
 
 
         row2.add(KeyboardService.getInlineButton(backName, getWord(BACK, lan)));
         row2.add(KeyboardService.getInlineButton(BACK_TO_MAIN_MENU_SEND, getWord(MENU, lan)));
         row1.add(phoneButton);
-        row1.add(KeyboardService.getInlineButton(PHOTOS+home.getId(), getWord(HOME_PHOTOS,lan)));
+        row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan)));
         if (state.equals(BotState.CHANGE_HOME_LIKE_MENU_MY_ACCOMMODATIONS)) {
             row1.add(likeButton);
             row2.add(1, KeyboardService.getInlineButton(DELETE + home.getId(), DELETE));
@@ -1120,21 +1117,21 @@ public class BotService {
         }
         if (data.equals(FLAT) || data.equals(HOUSE))
             return state.equals(BotState.CHOOSE_HOME_TYPE) ? BotState.CHOOSE_HOME_NUMBER_EDIT : BotState.GIVE_HOME_NUMBER;
-        if (data.startsWith(LIKE)){
+        if (data.startsWith(LIKE)) {
             update.getCallbackQuery().setData(data.substring(LIKE.length()));
             return state.equals(BotState.SHOW_OPTIONS) ? BotState.CHANGE_HOME_LIKE_MENU_ALL : state.equals(BotState.SHOW_SORTED_OPTIONS) ?
                     BotState.CHANGE_HOME_LIKE_MENU_SEARCH : state.equals(BotState.MY_FAVOURITES) ? BotState.CHANGE_HOME_LIKE_MENU_FAVOURITES :
                     state.equals(BotState.MY_HOMES) ? BotState.CHANGE_HOME_LIKE_MENU_MY_ACCOMMODATIONS : BotState.CHANGE_HOME_LIKE_MENU_ALL;
         }
 
-        if (data.startsWith(PHONE)){
+        if (data.startsWith(PHONE)) {
             update.getCallbackQuery().setData(data.substring(PHONE.length()));
             return state.equals(BotState.SHOW_OPTIONS) ? SHOW_HOME_PHONE_MENU_ALL : state.equals(BotState.SHOW_SORTED_OPTIONS) ?
                     BotState.SHOW_HOME_PHONE_MENU_SEARCH : state.equals(BotState.MY_FAVOURITES) ? BotState.SHOW_HOME_PHONE_MENU_FAVOURITES :
                     state.equals(BotState.MY_HOMES) ? BotState.SHOW_HOME_PHONE_MENU_MY_ACCOMMODATIONS : SHOW_HOME_PHONE_MENU_ALL;
         }
 
-        if(data.startsWith(PHOTOS)){
+        if (data.startsWith(PHOTOS)) {
             update.getCallbackQuery().setData(data.substring(PHOTOS.length()));
             return BotState.SHOW_HOME_PHOTOS;
         }
@@ -1374,14 +1371,14 @@ public class BotService {
             InlineKeyboardButton phoneButton =
                     new InlineKeyboardButton(interestService.getVisible(home, user) ?
                             userService.getById(home.getUser().getId()).getPhoneNumber() : getWord(GET_PHONE_NUMBER, lan));
-            phoneButton.setCallbackData(PHONE+home.getId().toString());
+            phoneButton.setCallbackData(PHONE + home.getId().toString());
 
 
             InlineKeyboardButton likeButton = new InlineKeyboardButton(home.getLikes()
                     + " " + (like.isActive() ? LIKE_ACTIVE : LIKE_NOT_ACTIVE));
-            likeButton.setCallbackData(LIKE+like.getId().toString());
+            likeButton.setCallbackData(LIKE + like.getId().toString());
             row1.add(phoneButton);
-            row1.add(KeyboardService.getInlineButton(PHOTOS+home.getId(), getWord(HOME_PHOTOS,lan)));
+            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan)));
             row2.add(likeButton);
             sendPhoto.setReplyMarkup(markup);
         }
@@ -1460,14 +1457,14 @@ public class BotService {
             InlineKeyboardButton phoneButton =
                     new InlineKeyboardButton(interestService.getVisible(home, user) ?
                             userService.getById(home.getUser().getId()).getPhoneNumber() : getWord(GET_PHONE_NUMBER, lan));
-            phoneButton.setCallbackData(PHONE+home.getId().toString());
+            phoneButton.setCallbackData(PHONE + home.getId().toString());
 
 
             InlineKeyboardButton likeButton = new InlineKeyboardButton(home.getLikes()
                     + " " + (like.isActive() ? LIKE_ACTIVE : LIKE_NOT_ACTIVE));
-            likeButton.setCallbackData(LIKE+like.getId().toString());
+            likeButton.setCallbackData(LIKE + like.getId().toString());
             row1.add(phoneButton);
-            row1.add(KeyboardService.getInlineButton(PHOTOS+home.getId(), getWord(HOME_PHOTOS,lan)));
+            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan)));
             row2.add(likeButton);
             sendPhoto.setReplyMarkup(markup);
         }
@@ -1521,18 +1518,18 @@ public class BotService {
             InlineKeyboardButton phoneButton =
                     new InlineKeyboardButton(interestService.getVisible(home, user) ?
                             userService.getById(home.getUser().getId()).getPhoneNumber() : getWord(GET_PHONE_NUMBER, lan));
-            phoneButton.setCallbackData(PHONE+home.getId().toString());
+            phoneButton.setCallbackData(PHONE + home.getId().toString());
 
             InlineKeyboardButton likeButton = new InlineKeyboardButton(home.getLikes()
                     + " " + (like.isActive() ? LIKE_ACTIVE : LIKE_NOT_ACTIVE));
-            likeButton.setCallbackData(LIKE+like.getId().toString());
+            likeButton.setCallbackData(LIKE + like.getId().toString());
 
             InlineKeyboardButton deleteButton = new InlineKeyboardButton(DELETE);
             deleteButton.setCallbackData(DELETE + home.getId());
 
 
             row1.add(phoneButton);
-            row1.add(KeyboardService.getInlineButton(PHOTOS+home.getId(), getWord(HOME_PHOTOS,lan)));
+            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan)));
             row1.add(likeButton);
             row2.add(deleteButton);
             sendPhoto.setReplyMarkup(markup);
@@ -1597,14 +1594,14 @@ public class BotService {
         return update.hasMessage() ? update.getMessage() : update.getCallbackQuery().getMessage();
     }
 
-    public SendMediaGroup showHomePhotos(Update update,Language lan) {
+    public SendMediaGroup showHomePhotos(Update update, Language lan) {
         CallbackQuery query = update.getCallbackQuery();
         Home home = homeService.getById(UUID.fromString(query.getData()));
         List<InputMedia> mediaPhotos = home.getAttachments()
                 .stream()
                 .map(item -> new InputMediaPhoto(item.getFileId())).collect(Collectors.toList());
-        if(mediaPhotos.size()!=1)mediaPhotos.get(0).setCaption(getCaptionByHome(home,lan));
-        return new SendMediaGroup(query.getMessage().getChatId().toString(),mediaPhotos);
+        if (mediaPhotos.size() != 1) mediaPhotos.get(0).setCaption(getCaptionByHome(home, lan));
+        return new SendMediaGroup(query.getMessage().getChatId().toString(), mediaPhotos);
     }
 
 }

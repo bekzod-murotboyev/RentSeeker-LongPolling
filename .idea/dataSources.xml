@@ -15,5 +15,12 @@
       <jdbc-url>jdbc:postgresql://localhost:5432/rent_seeker</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="rent_seeker@rentseeker.cdgdbfweslzx.us-east-1.rds.amazonaws.com" uuid="2b8b973b-4565-457a-ae32-2c0ac92efcd9">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://rentseeker.cdgdbfweslzx.us-east-1.rds.amazonaws.com:5432/rent_seeker</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

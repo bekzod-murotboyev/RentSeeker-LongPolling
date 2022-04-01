@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public interface HomeRepository extends JpaRepository<Home, UUID> {
 
-    List<Home> findAllByUserId(UUID user_id);
+    List<Home> findAllByUserIdAndActiveTrue(UUID user_id);
 
     Page<Home> findByUser_PhoneNumber(String phoneNumber, Pageable pageable);
 
@@ -20,6 +20,8 @@ public interface HomeRepository extends JpaRepository<Home, UUID> {
     Optional<Home> findByUserIdAndActiveFalse(UUID userId);
 
     Page<Home> findAllByActiveTrue(Pageable pageable);
+
+    List<Home> findAllByActiveTrue();
 
     List<Home> findByActive(boolean active);
 }

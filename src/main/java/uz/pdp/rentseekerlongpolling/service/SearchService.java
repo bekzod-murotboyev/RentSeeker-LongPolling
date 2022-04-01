@@ -31,7 +31,7 @@ public class SearchService {
 
     public List<Home> searchHome(Search search) {
         List<Home> found = new ArrayList<>();
-        for (Home home : homeService.getAllHome()) {
+        for (Home home : homeService.getAllActiveHomes()) {
             if (search.getRegion() != null)
                 if (search.getRegion().equals(home.getRegion())) {
                     if (search.getDistrict() != null)

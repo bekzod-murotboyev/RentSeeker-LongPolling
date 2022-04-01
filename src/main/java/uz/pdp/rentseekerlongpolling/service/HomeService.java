@@ -110,6 +110,9 @@ public class HomeService {
     public List<Home> getAllHome() {
         return homeRepository.findAll();
     }
+    public List<Home> getAllActiveHomes() {
+        return homeRepository.findAllByActiveTrue();
+    }
 
     public List<Home> getDayHomes() {
         List<Home> homeDay = new ArrayList<>();
@@ -130,7 +133,7 @@ public class HomeService {
     }
 
     public List<Home> getByOwnerId(UUID ownerId) {
-        return homeRepository.findAllByUserId(ownerId);
+        return homeRepository.findAllByUserIdAndActiveTrue(ownerId);
     }
 
     public Page<Home> getAllActiveHomes(Integer page, Integer size) {

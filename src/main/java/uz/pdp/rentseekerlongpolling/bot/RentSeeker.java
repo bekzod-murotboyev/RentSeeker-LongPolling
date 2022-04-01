@@ -159,6 +159,7 @@ public class RentSeeker extends TelegramLongPollingBot {
                     break;
                 case BACK_TO_MAIN_MENU_EDIT:
                 case USER:
+                case MENU:
                     state = BotState.MAIN_MENU_EDIT;
                     break;
                 case CHANGE_LANGUAGE:
@@ -432,17 +433,17 @@ public class RentSeeker extends TelegramLongPollingBot {
                 execute(botService.getShowMenuEdit(update, lan));
                 break;
             case SHOW_OPTIONS: {
-                if (update.getCallbackQuery().getData().equals(SHOW_ALL))
-                    execute(botService.deleteMessage(update));
                 HomePageableDTO homePageableDTO = botService.showAllHomes(update, lan);
                 if (homePageableDTO.getSendPhotos() == null) {
                     if (homePageableDTO.getMessage() == null)
-                        execute(botService.homeNotFound(update, lan, BACK_TO_SHOW_MENU_EDIT));
+                        execute(botService.homeNotFound(update, lan));
                     else
                         execute(botService.getAnswerCallbackQuery(update.getCallbackQuery(),
                                 homePageableDTO.getMessage(), lan));
                     return;
                 }
+                if (update.getCallbackQuery().getData().equals(SHOW_ALL))
+                    execute(botService.deleteMessage(update));
                 for (SendPhoto sendPhoto : homePageableDTO.getSendPhotos())
                     execute(sendPhoto);
             }
@@ -536,7 +537,7 @@ public class RentSeeker extends TelegramLongPollingBot {
                     execute(botService.deleteMessage(update));
                     List<SendPhoto> sendPhotos = botService.showSortedOptionsSend(update, lan);
                     if (sendPhotos == null) {
-                        execute(botService.homeNotFound(update, lan, BACK_TO_CHOOSE_MAX_PRICE_EDIT));
+                        execute(botService.searchedHomeNotFound(update, lan));
                         return;
                     }
                     for (SendPhoto sendPhoto : sendPhotos)
@@ -554,23 +555,23 @@ public class RentSeeker extends TelegramLongPollingBot {
                 execute(botService.getMyNotesMenuSend(update, lan));
                 break;
             case MY_FAVOURITES: {
-                execute(botService.deleteMessage(update));
                 List<SendPhoto> sendPhotos = botService.getMyFavouriteHomes(update, lan);
                 if (sendPhotos == null) {
-                    execute(botService.homeNotFound(update, lan, BACK_TO_MY_NOTES_MENU_EDIT));
+                    execute(botService.homeNotFound(update, lan));
                     return;
                 }
+                execute(botService.deleteMessage(update));
                 for (SendPhoto sendPhoto : sendPhotos)
                     execute(sendPhoto);
             }
             break;
             case MY_HOMES: {
-                execute(botService.deleteMessage(update));
                 List<SendPhoto> sendPhotos = botService.getMyHomes(update, lan);
                 if (sendPhotos == null) {
-                    execute(botService.homeNotFound(update, lan, BACK_TO_MY_NOTES_MENU_EDIT));
+                    execute(botService.homeNotFound(update, lan));
                     return;
                 }
+                execute(botService.deleteMessage(update));
                 for (SendPhoto sendPhoto : sendPhotos)
                     execute(sendPhoto);
             }
@@ -728,8 +729,7 @@ public class RentSeeker extends TelegramLongPollingBot {
     private void showHomes(Update update, Language lan, String searchType) throws TelegramApiException {
         List<SendPhoto> sendPhotos = adminBotService.showHomes(update, lan, searchType);
         if (sendPhotos == null) {
-            execute(botService.deleteMessage(update));
-            execute(botService.homeNotFound(update, lan, BACK_TO_ADMIN_HOMES_FILTER_EDIT));
+            execute(botService.homeNotFound(update, lan));
             return;
         }
         for (SendPhoto sendPhoto : sendPhotos)
