@@ -3,9 +3,9 @@ package uz.pdp.rentseekerlongpolling.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.rentseekerlongpolling.payload.ApiResponse;
-import uz.pdp.rentseekerlongpolling.payload.HomeAddDTO;
-import uz.pdp.rentseekerlongpolling.payload.HomeEditDTO;
+import uz.pdp.rentseekerlongpolling.payload.response.ApiResponse;
+import uz.pdp.rentseekerlongpolling.payload.home.HomeAddDTO;
+import uz.pdp.rentseekerlongpolling.payload.home.HomeEditDTO;
 import uz.pdp.rentseekerlongpolling.payload.SearchDTO;
 import uz.pdp.rentseekerlongpolling.service.HomeService;
 

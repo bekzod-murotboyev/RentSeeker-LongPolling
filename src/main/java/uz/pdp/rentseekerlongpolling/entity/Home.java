@@ -61,5 +61,6 @@ public class Home extends BaseModel {
         active=false;
     }
 
+    String detailsPath;
 
 }

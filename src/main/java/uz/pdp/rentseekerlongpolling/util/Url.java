@@ -7,4 +7,6 @@ public interface Url {
     String USER_ACTIVE="/active";
     String USER_INACTIVE="/inactive";
     String GLOBAL="http://rent-seeker.us-east-1.elasticbeanstalk.com/";
+
+
 }

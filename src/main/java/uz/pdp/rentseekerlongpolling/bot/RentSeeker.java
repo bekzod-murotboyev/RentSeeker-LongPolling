@@ -2,19 +2,15 @@ package uz.pdp.rentseekerlongpolling.bot;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendMediaGroup;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageCaption;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import uz.pdp.rentseekerlongpolling.payload.HomePageableDTO;
+import uz.pdp.rentseekerlongpolling.payload.home.HomePageableDTO;
 import uz.pdp.rentseekerlongpolling.payload.LanStateDTO;
 import uz.pdp.rentseekerlongpolling.service.AdminBotService;
 import uz.pdp.rentseekerlongpolling.service.BotService;
@@ -25,17 +21,15 @@ import uz.pdp.rentseekerlongpolling.util.enums.Language;
 import uz.pdp.rentseekerlongpolling.util.enums.Role;
 import uz.pdp.rentseekerlongpolling.util.security.BaseData;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static uz.pdp.rentseekerlongpolling.util.constant.Constant.*;
 import static uz.pdp.rentseekerlongpolling.util.constant.Constant.CHANGE_LANGUAGE;
 import static uz.pdp.rentseekerlongpolling.util.constant.Constant.MY_FAVOURITES;
 import static uz.pdp.rentseekerlongpolling.util.enums.BotState.*;
-import static uz.pdp.rentseekerlongpolling.util.enums.BotState.ERROR;
 import static uz.pdp.rentseekerlongpolling.util.security.BaseData.*;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class RentSeeker extends TelegramLongPollingBot {
 

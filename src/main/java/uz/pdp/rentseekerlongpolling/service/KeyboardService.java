@@ -40,6 +40,12 @@ public class KeyboardService extends LanguageService implements Constant {
         button.setCallbackData(data);
         return button;
     }
+    public static InlineKeyboardButton getInlineButton(String data, String text,String url) {
+        InlineKeyboardButton button = new InlineKeyboardButton(text);
+        button.setCallbackData(data);
+        button.setUrl(url);
+        return button;
+    }
 
     public static ReplyKeyboardMarkup createReplyMarkup(List<List<String>> rows, Language lan) {
         List<KeyboardRow> rowList = new ArrayList<>();

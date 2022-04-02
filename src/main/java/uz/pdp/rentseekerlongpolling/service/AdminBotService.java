@@ -215,7 +215,7 @@ public class AdminBotService extends LanguageService implements Constant {
 
             InlineKeyboardButton banButton = new InlineKeyboardButton(DELETE);
             banButton.setCallbackData(home.getId().toString());
-            row1.add(KeyboardService.getInlineButton(PHOTOS+home.getId(), getWord(HOME_PHOTOS,lan)));
+            row1.add(KeyboardService.getInlineButton(PHOTOS+home.getId(), getWord(HOME_PHOTOS,lan),home.getDetailsPath()));
             row1.add(banButton);
             sendPhoto.setReplyMarkup(markup);
         }

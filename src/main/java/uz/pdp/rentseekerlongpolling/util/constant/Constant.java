@@ -28,8 +28,7 @@ public interface Constant {
 
     String ADMIN_HOMES_FILTER_MENU_TEXT = "Choose period in which homes were added...";
     String ADMIN_HOMES_FILTER_MENU_TEXT_RU = "Выберите в течение которого жилья были добавлены...";
-    //
-    String ADMIN_HOMES_FILTER_MENU_TEXT_UZ = "...";
+    String ADMIN_HOMES_FILTER_MENU_TEXT_UZ = "Uylar qo'shilgan davrni tanlang...";
     //
 
 
@@ -135,8 +134,6 @@ public interface Constant {
     String ADMIN_HOMES_INFO_DESCRIPTION_UZ = "Tavsif: ";
 
     String ADMIN_HOMES_INFO_NUMBER_OF_INTERESTED = "👁‍🗨 ";
-    String ADMIN_HOMES_INFO_NUMBER_OF_INTERESTED_RU = "👁‍🗨 ";
-    String ADMIN_HOMES_INFO_NUMBER_OF_INTERESTED_UZ = "👁‍🗨 ";
 
     String ADMIN_HOMES_INFO_MAP_URL = "Location: ";
     String ADMIN_HOMES_INFO_MAP_URL_RU = "Локация: ";
@@ -228,9 +225,9 @@ public interface Constant {
     String ENTER_MIN_VALUE_MENU_TEXT_RU = "Введите минимальное значение($)...";
     String ENTER_MIN_VALUE_MENU_TEXT_UZ = "Minimal qiymatni kiriting($)...";
 
-    String ENTER_AREA_MENU_TEXT = "Enter area dimensions(m^2)...";
-    String ENTER_AREA_MENU_TEXT_RU = "Введите размер площади(m^2)...";
-    String ENTER_AREA_MENU_TEXT_UZ = "Maydoni hajmini kiriting(m^2)...";
+    String ENTER_AREA_MENU_TEXT = "Enter area dimensions(m²)...";
+    String ENTER_AREA_MENU_TEXT_RU = "Введите размер площади(m²)...";
+    String ENTER_AREA_MENU_TEXT_UZ = "Maydoni hajmini kiriting(m²)...";
 
     String SEND_PHOTO_MENU_TEXT = "Send photos of home...";
     String SEND_PHOTO_MENU_TEXT_RU = "Отправте фотографии квартиры...";
@@ -343,29 +340,29 @@ public interface Constant {
     String FLAT_RU = "Квартира";
     String FLAT_UZ = "Kvartira";
 
-    String NUMBER_OF_ROOMS = "\uD83D\uDEAA Number of rooms:";
-    String NUMBER_OF_ROOMS_RU = "\uD83D\uDEAA Количество комнат:";
-    String NUMBER_OF_ROOMS_UZ = "\uD83D\uDEAA Xonalar soni:";
+    String NUMBER_OF_ROOMS = "\uD83D\uDEAA Number of rooms: ";
+    String NUMBER_OF_ROOMS_RU = "\uD83D\uDEAA Количество комнат: ";
+    String NUMBER_OF_ROOMS_UZ = "\uD83D\uDEAA Xonalar soni: ";
 
-    String AREA = "\uD83D\uDCD0Area:";
-    String AREA_RU = "\uD83D\uDCD0Площадь:";
-    String AREA_UZ = "\uD83D\uDCD0Maydon:";
+    String AREA = "\uD83D\uDCD0 Area: ";
+    String AREA_RU = "\uD83D\uDCD0 Площадь: ";
+    String AREA_UZ = "\uD83D\uDCD0 Maydon: ";
 
-    String SEND_PHOTOS = "\uD83D\uDCF7Send photos";
-    String SEND_PHOTOS_RU = "\uD83D\uDCF7Отправить фото";
-    String SEND_PHOTOS_UZ = "\uD83D\uDCF7Rasm jonatish";
+    String SEND_PHOTOS = "\uD83D\uDCF7 Send photos";
+    String SEND_PHOTOS_RU = "\uD83D\uDCF7 Отправить фото";
+    String SEND_PHOTOS_UZ = "\uD83D\uDCF7 Rasm jonatish";
 
     String DO_NOT_SEND_PHOTO = "Do not send photo";
     String DO_NOT_SEND_PHOTO_RU = "Не отправлять фото";
     String DO_NOT_SEND_PHOTO_UZ = "Rasmni jonatmaslik";
 
-    String SET_PRICE = "\uD83D\uDCB0Set price";
-    String SET_PRICE_RU = "\uD83D\uDCB0Ввести цену";
-    String SET_PRICE_UZ = "\uD83D\uDCB0Narxni qoyish";
+    String SET_PRICE = "\uD83D\uDCB0 Set price";
+    String SET_PRICE_RU = "\uD83D\uDCB0 Ввести цену";
+    String SET_PRICE_UZ = "\uD83D\uDCB0 Narxni qoyish";
 
-    String WRITE_DESCRIPTION = "\uD83D\uDCDDWrite description";
-    String WRITE_DESCRIPTION_RU = "\uD83D\uDCDDНаписать описание";
-    String WRITE_DESCRIPTION_UZ = "\uD83D\uDCDDTavsif yozish";
+    String WRITE_DESCRIPTION = "\uD83D\uDCDD Write description";
+    String WRITE_DESCRIPTION_RU = "\uD83D\uDCDD Написать описание";
+    String WRITE_DESCRIPTION_UZ = "\uD83D\uDCDD Tavsif yozish";
 
     String SUCCESSFULLY_SAVED="✅ Your home has been successfully added";
     String SUCCESSFULLY_SAVED_RU="✅ Ваш дом был успешно добавлен";
@@ -387,29 +384,29 @@ public interface Constant {
     String HOMES_NOT_FOUND_UZ="\uD83C\uDD99 Hozircha uylar mavjud emas";
 
     //HOUSE_VIEW
-    String HOUSE_TYPE = "\uD83C\uDFE1Type of accommodation:";
-    String HOUSE_TYPE_RU = "\uD83C\uDFE1Тип дома:";
-    String HOUSE_TYPE_UZ = "\uD83C\uDFE1Uy turi:";
+    String HOUSE_TYPE = "\uD83C\uDFE1 Type of accommodation: ";
+    String HOUSE_TYPE_RU = "\uD83C\uDFE1 Тип дома: ";
+    String HOUSE_TYPE_UZ = "\uD83C\uDFE1 Uy turi: ";
 
-    String ADDRESS = "⛳️Address:";
-    String ADDRESS_RU = "⛳️Адрес:";
-    String ADDRESS_UZ = "⛳️Manzil:";
+    String ADDRESS = "⛳ Address: ";
+    String ADDRESS_RU = "⛳ Адрес: ";
+    String ADDRESS_UZ = "⛳️ Manzil: ";
 
-    String DESCRIPTION = "\uD83D\uDCDD Description:";
-    String DESCRIPTION_RU = "\uD83D\uDCDD Описание:";
-    String DESCRIPTION_UZ = "\uD83D\uDCDD Tavsifi:";
+    String DESCRIPTION = "\uD83D\uDCDD Description: ";
+    String DESCRIPTION_RU = "\uD83D\uDCDD Описание: ";
+    String DESCRIPTION_UZ = "\uD83D\uDCDD Tavsifi: ";
 
     String DATE="\uD83D\uDCC5 Date: ";
     String DATE_RU="\uD83D\uDCC5 Дата: ";
     String DATE_UZ="\uD83D\uDCC5 Sana: ";
 
-    String NUMBER_OF_LIKES = "♥️Likes:";
-    String NUMBER_OF_LIKES_RU = "♥️Лайки:";
-    String NUMBER_OF_LIKES_UZ = "♥️Layklar:";
+    String NUMBER_OF_LIKES = "♥️ Likes: ";
+    String NUMBER_OF_LIKES_RU = "♥️ Лайки: ";
+    String NUMBER_OF_LIKES_UZ = "♥️ Layklar: ";
 
-    String NUMBER_OF_VIEWS = "\uD83D\uDC53 Views:";
-    String NUMBER_OF_VIEWS_RU = "\uD83D\uDC53 Просмотры:";
-    String NUMBER_OF_VIEWS_UZ = "\uD83D\uDC53 Ko'rganlar soni:";
+    String NUMBER_OF_VIEWS = "\uD83D\uDC53 Views: ";
+    String NUMBER_OF_VIEWS_RU = "\uD83D\uDC53 Просмотры: ";
+    String NUMBER_OF_VIEWS_UZ = "\uD83D\uDC53 Ko'rganlar soni: ";
 
     String GET_PHONE_NUMBER = "\uD83D\uDCDE Phone number";
     String GET_PHONE_NUMBER_RU = "\uD83D\uDCDE Номер телефона";
@@ -434,29 +431,29 @@ public interface Constant {
 
     //SEARCH
 
-    String SEARCH_BY_ROOMS = "\uD83D\uDEAASearch by number of rooms";
-    String SEARCH_BY_ROOMS_RU = "\uD83D\uDEAAИскать по количеству комнат";
-    String SEARCH_BY_ROOMS_UZ = "\uD83D\uDEAAXonalar soni orqali qidirish";
+    String SEARCH_BY_ROOMS = "\uD83D\uDEAA Search by number of rooms";
+    String SEARCH_BY_ROOMS_RU = "\uD83D\uDEAA Искать по количеству комнат";
+    String SEARCH_BY_ROOMS_UZ = "\uD83D\uDEAA Xonalar soni orqali qidirish";
 
-    String SEARCH_BY_PRICE = "\uD83D\uDCB0Search by price";
-    String SEARCH_BY_PRICE_RU = "\uD83D\uDCB0Искать по цене дома";
-    String SEARCH_BY_PRICE_UZ = "\uD83D\uDCB0Uy narxi orqali qidirish";
+    String SEARCH_BY_PRICE = "\uD83D\uDCB0 Search by price";
+    String SEARCH_BY_PRICE_RU = "\uD83D\uDCB0 Искать по цене дома";
+    String SEARCH_BY_PRICE_UZ = "\uD83D\uDCB0 Uy narxi orqali qidirish";
 
-    String MAX_PRICE = "\uD83D\uDCB5Maximal price:";
-    String MAX_PRICE_RU = "\uD83D\uDCB5Максимальная цена:";
-    String MAX_PRICE_UZ = "\uD83D\uDCB5Maksimal narx:";
+    String MAX_PRICE = "\uD83D\uDCB5 Maximal price: ";
+    String MAX_PRICE_RU = "\uD83D\uDCB5 Максимальная цена: ";
+    String MAX_PRICE_UZ = "\uD83D\uDCB5 Maksimal narx: ";
 
-    String MIN_PRICE = "\uD83D\uDCB5Minimal price:";
-    String MIN_PRICE_RU = "\uD83D\uDCB5Минимальная цена:";
-    String MIN_PRICE_UZ = "\uD83D\uDCB5Minimal narx:";
+    String MIN_PRICE = "\uD83D\uDCB5 Minimal price: ";
+    String MIN_PRICE_RU = "\uD83D\uDCB5 Минимальная цена: ";
+    String MIN_PRICE_UZ = "\uD83D\uDCB5 Minimal narx: ";
 
-    String MAX_ROOMS = "\uD83D\uDEAAMaximal number of rooms:";
-    String MAX_ROOMS_RU = "\uD83D\uDEAAМаксимальная количество комнат:";
-    String MAX_ROOMS_UZ = "\uD83D\uDEAAMaksimal xonalar soni:";
+    String MAX_ROOMS = "\uD83D\uDEAA Maximal number of rooms: ";
+    String MAX_ROOMS_RU = "\uD83D\uDEAA Максимальная количество комнат: ";
+    String MAX_ROOMS_UZ = "\uD83D\uDEAA Maksimal xonalar soni: ";
 
-    String MIN_ROOMS = "\uD83D\uDEAAMinimal number of rooms:";
-    String MIN_ROOMS_RU = "\uD83D\uDEAAМинимальная количество комнат:";
-    String MIN_ROOMS_UZ = "\uD83D\uDEAAMinimal xonalar soni:";
+    String MIN_ROOMS = "\uD83D\uDEAA Minimal number of rooms: ";
+    String MIN_ROOMS_RU = "\uD83D\uDEAA Минимальная количество комнат: ";
+    String MIN_ROOMS_UZ = "\uD83D\uDEAA Minimal xonalar soni: ";
 
     //SETTINGS
 
@@ -591,7 +588,7 @@ public interface Constant {
 
     // REGIONS
     String TASHKENT="TASHKENT";
-    String TASHKENT_REGION="TASHKENT_REGION";
+    String TASHKENT_REGION="TASHKENT REGION";
     String ANDIJAN="ANDIJAN";
     String BUKHARA="BUKHARA";
     String DZHIZAK="DZHIZAK";
@@ -603,13 +600,13 @@ public interface Constant {
     String SYRDARYA="SYRDARYA";
     String FERGHANA="FERGHANA";
     String XORAZM="XORAZM";
-    String REPUBLIC_OF_KARAKALPAKSTAN="REPUBLIC_OF_KARAKALPAKSTAN";
+    String REPUBLIC_OF_KARAKALPAKSTAN="REPUBLIC OF KARAKALPAKSTAN";
 
     // DISTRICTS
     String OLMAZOR="OLMAZOR";
     String BEKTEMIR="BEKTEMIR";
     String MIROBOD="MIROBOD";
-    String MIRZO_ULUGBEK="MIRZO_ULUGBEK";
+    String MIRZO_ULUGBEK="MIRZO ULUGBEK";
     String SERGELI="SERGELI";
     String UCHTEPA="UCHTEPA";
     String SHAYXONTOHUR="SHAYXONTOHUR";

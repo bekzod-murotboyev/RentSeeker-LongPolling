@@ -1,0 +1,7 @@
+{"ok":true,
+"result":
+{"short_name":"🅸🅹🅰🆁🅰🅲🅷🅸",
+"author_name":"Bekzod",
+"author_url":"https:\/\/t.me\/bekhdev"
+,"access_token":"99327de8cb9a9214a91fc11ccc3ac661ffa9f3d3a703ee43ee31783b6792",
+"auth_url":"https:\/\/edit.telegra.ph\/auth\/cg9NXrCoJP1InAD12VBKZBnWnp2aQWC3aJO8bquSfv"}}

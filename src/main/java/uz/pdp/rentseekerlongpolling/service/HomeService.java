@@ -1,30 +1,46 @@
 package uz.pdp.rentseekerlongpolling.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.telegram.telegraph.api.methods.CreatePage;
+import org.telegram.telegraph.api.objects.Node;
+import org.telegram.telegraph.api.objects.NodeElement;
+import org.telegram.telegraph.api.objects.NodeText;
+import uz.pdp.rentseekerlongpolling.entity.Attachment;
 import uz.pdp.rentseekerlongpolling.entity.Home;
 import uz.pdp.rentseekerlongpolling.entity.Like;
 import uz.pdp.rentseekerlongpolling.entity.User;
-import uz.pdp.rentseekerlongpolling.payload.ApiResponse;
-import uz.pdp.rentseekerlongpolling.payload.HomeAddDTO;
-import uz.pdp.rentseekerlongpolling.payload.HomeEditDTO;
+import uz.pdp.rentseekerlongpolling.feign.TelegraphFeign;
+import uz.pdp.rentseekerlongpolling.payload.response.ApiResponse;
+import uz.pdp.rentseekerlongpolling.payload.home.HomeAddDTO;
+import uz.pdp.rentseekerlongpolling.payload.home.HomeEditDTO;
 import uz.pdp.rentseekerlongpolling.payload.SearchDTO;
-import uz.pdp.rentseekerlongpolling.repository.AttachmentRepository;
+import uz.pdp.rentseekerlongpolling.payload.telegram.telegraph.CreatedPageDTO;
 import uz.pdp.rentseekerlongpolling.repository.HomeRepository;
 import uz.pdp.rentseekerlongpolling.util.enums.BotState;
+import uz.pdp.rentseekerlongpolling.util.enums.HomeStatus;
+import uz.pdp.rentseekerlongpolling.util.enums.HomeType;
+import uz.pdp.rentseekerlongpolling.util.enums.Language;
+import uz.pdp.rentseekerlongpolling.util.security.BaseData;
+import uz.pdp.rentseekerlongpolling.util.security.Telegraph;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import static uz.pdp.rentseekerlongpolling.service.LanguageService.getWord;
 import static uz.pdp.rentseekerlongpolling.util.constant.ApiResponseText.*;
+import static uz.pdp.rentseekerlongpolling.util.constant.Constant.*;
+import static uz.pdp.rentseekerlongpolling.util.security.Telegraph.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +52,7 @@ public class HomeService {
 
     private final ModelMapper modelMapper;
 
-    private final AttachmentRepository attachmentRepository;
+    private final TelegraphFeign telegraphFeign;
 
     public void addHome(Home home, String chatId, BotState state) {
         Home crtHome = getNoActiveHomeByChatId(chatId);
@@ -80,6 +96,7 @@ public class HomeService {
                 break;
             case SAVE_HOME_TO_STORE: {
                 crtHome.setDescription(home.getDescription());
+                crtHome.setDetailsPath(getDetailsPath(crtHome));
                 crtHome.setActive(true);
             }
             break;
@@ -110,6 +127,7 @@ public class HomeService {
     public List<Home> getAllHome() {
         return homeRepository.findAll();
     }
+
     public List<Home> getAllActiveHomes() {
         return homeRepository.findAllByActiveTrue();
     }
@@ -258,9 +276,108 @@ public class HomeService {
 
     public void deleteHomeAttachment(String chatId) {
         Optional<Home> optionalHome = homeRepository.findByUser_ChatIdAndActiveFalse(chatId);
-        optionalHome.ifPresent(home-> {
+        optionalHome.ifPresent(home -> {
             home.setAttachments(null);
             homeRepository.save(home);
         });
     }
+
+    @SneakyThrows
+    private String getDetailsPath(Home home) {
+        return telegraphFeign.createPage(
+                ACCESS_TOKEN,
+                BaseData.NAME,
+                new ObjectMapper().writeValueAsString(getNodeList(home, home.getUser().getLanguage()))
+        ).getResult().getPath();
+
+    }
+
+    public List<Node> getNodeList(Home home, Language lan) {
+        List<Node> nodeElements = home.getAttachments().stream().map(item -> new NodeElement(
+                "img",
+                Map.of(
+                        "src",
+                        BaseData.TELEGRAM_GET_FILE + item.getFilePath(),
+                        "style",
+                        "margin-bottom: 50px"
+
+                ),
+                null
+        )).collect(Collectors.toList());
+        addRow(nodeElements, HOUSE_TYPE, home.getHomeType().equals(HomeType.HOUSE) ? HOUSE : FLAT, lan);
+        addRow(nodeElements, STATUS, home.getStatus().equals(HomeStatus.SELL) ? SELL : RENT, lan);
+        addRow(nodeElements, ADMIN_HOMES_INFO_REGION, home.getRegion().name(), lan);
+        addRow(nodeElements, ADMIN_HOMES_INFO_DISTRICT, home.getDistrict().name(), lan);
+        addRowStaticData(nodeElements, ADDRESS, home.getAddress(), lan);
+        addRowStaticData(nodeElements, NUMBER_OF_ROOMS, String.valueOf(home.getNumberOfRooms()), lan);
+        addRowStaticData(nodeElements, AREA, home.getArea() + " m²", lan);
+        addRowStaticData(nodeElements, DATE, DateTimeFormatter.ofPattern("dd/MM/yyyy").format(home.getCreatedDate()), lan);
+        addRowStaticData(nodeElements, ADMIN_HOMES_INFO_PRICE, home.getPrice() + " $", lan);
+        addRowStaticData(nodeElements, DESCRIPTION, home.getDescription(), lan);
+        nodeElements.add(home.getUser().getUsername() == null ? getH4("☎️ +998" + home.getUser().getPhoneNumber()) :
+                getH4WithA("https://t.me/" + home.getUser().getUsername(), "☎️ +998" + home.getUser().getPhoneNumber()));
+        nodeElements.add(getBr());
+        nodeElements.add(getA("https://t.me/" + BaseData.USERNAME, "@" + BaseData.USERNAME));
+
+
+        return nodeElements;
+    }
+
+    public void addRow(List<Node> nodeElements, String type, String data, Language lan) {
+        nodeElements.add(getBold(getWord(type, lan)));
+        nodeElements.add(getItalicParagraph(getWord(data, lan)));
+        nodeElements.add(getBr());
+    }
+
+    public void addRowStaticData(List<Node> nodeElements, String type, String data, Language lan) {
+        nodeElements.add(getBold(getWord(type, lan)));
+        nodeElements.add(getItalicParagraph(data));
+        nodeElements.add(getBr());
+    }
+
+    public void addRowStatic(List<Node> nodeElements, String type, String data) {
+        nodeElements.add(getBold(type));
+        nodeElements.add(getItalicParagraph(data));
+        nodeElements.add(getBr());
+    }
+
+
+    private Node getH3(String text) {
+        return new NodeElement("h3", null, List.of(new NodeText(text)));
+    }
+
+    private Node getH4(String text) {
+        return new NodeElement("h4", null, List.of(new NodeText(text)));
+    }
+
+    private Node getH4WithA(String href, String text) {
+        return new NodeElement("h4", null, List.of(getA(href, text)));
+    }
+
+    private Node getParagraph(String text) {
+        return new NodeElement("p", null, List.of(new NodeText(text)));
+    }
+
+    private Node getItalicParagraph(String text) {
+        return new NodeElement("p", null, List.of(getItalic(text)));
+    }
+
+    private Node getA(String href, String text) {
+        return new NodeElement("a", Map.of("href", href), List.of(new NodeText(text)));
+    }
+
+    private Node getBold(String text) {
+        return new NodeElement("b", null, List.of(new NodeText(text)));
+    }
+
+    private Node getItalic(String text) {
+        return new NodeElement("i", null, List.of(new NodeText(text)));
+    }
+
+    private Node getBr() {
+        return new NodeElement("br", null, null);
+    }
+
 }
+
+

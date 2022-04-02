@@ -21,13 +21,13 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRem
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import uz.pdp.rentseekerlongpolling.component.EmailComponent;
 import uz.pdp.rentseekerlongpolling.entity.User;
 import uz.pdp.rentseekerlongpolling.entity.*;
+import uz.pdp.rentseekerlongpolling.feign.TelegramFileFeign;
 import uz.pdp.rentseekerlongpolling.model.locationModels.LocationsItem;
-import uz.pdp.rentseekerlongpolling.payload.HomePageableDTO;
-import uz.pdp.rentseekerlongpolling.util.constant.Constant;
+import uz.pdp.rentseekerlongpolling.payload.home.HomePageableDTO;
+import uz.pdp.rentseekerlongpolling.payload.telegram.simple_telegram.FileDataDTO;
 import uz.pdp.rentseekerlongpolling.util.enums.*;
 
 import java.time.format.DateTimeFormatter;
@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
 
 import static uz.pdp.rentseekerlongpolling.service.LanguageService.getWord;
 import static uz.pdp.rentseekerlongpolling.util.constant.Constant.*;
-import static uz.pdp.rentseekerlongpolling.util.enums.BotState.MAIN_MENU_EDIT;
 import static uz.pdp.rentseekerlongpolling.util.enums.BotState.SHOW_HOME_PHONE_MENU_ALL;
 
 
@@ -62,6 +61,8 @@ public class BotService {
     private final EmailComponent emailComponent;
 
     private final ModelMapper modelMapper;
+
+    private final TelegramFileFeign telegramFileFeign;
 
 
     public AnswerCallbackQuery getAnswerCallbackQuery(CallbackQuery query, String text, Language lan) {
@@ -491,7 +492,8 @@ public class BotService {
     public void saveHomePhoto(Update update, BotState state) {
         Message message = update.getMessage();
         PhotoSize photoSize = message.getPhoto().get(message.getPhoto().size() - 1);
-
+        FileDataDTO filePath = telegramFileFeign.getFilePath(photoSize.getFileId());
+        photoSize.setFilePath(filePath.getResult().getFilePath());
         Home home = new Home();
         User user = userService.getByChatId(message.getChatId().toString());
         home.setAttachments(List.of(modelMapper.map(photoSize, Attachment.class)));
@@ -941,7 +943,7 @@ public class BotService {
             row1.add(KeyboardService.getInlineButton(PHONE + home.getId(),
                     interestService.getVisible(home, user) ? userService.getById(home.getUser().getId()).getPhoneNumber()
                             : getWord(GET_PHONE_NUMBER, lan)));
-            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan)));
+            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan),home.getDetailsPath()));
             row1.add(KeyboardService
                     .getInlineButton(LIKE + like.getId(),
                             home.getLikes()
@@ -998,7 +1000,7 @@ public class BotService {
         row1.add(KeyboardService.getInlineButton(PHONE + home.getId().toString(),
                 interestService.changeVisible(home, user) ?
                         userService.getById(home.getUser().getId()).getPhoneNumber() : getWord(GET_PHONE_NUMBER, lan)));
-        row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan)));
+        row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan),home.getDetailsPath()));
         row2.add(KeyboardService.getInlineButton(backName, getWord(BACK, lan)));
         row2.add(KeyboardService.getInlineButton(BACK_TO_MAIN_MENU_SEND, getWord(MENU, lan)));
 
@@ -1024,10 +1026,10 @@ public class BotService {
     /////////// CAPTION
     public String getCaptionByHome(Home home, Language lan) {
         return getWord(HOUSE_TYPE, lan) + "\t" + getWord(home.getHomeType().equals(HomeType.HOUSE) ? HOUSE : FLAT, lan) + "\t\t\t\t\t\t\t\t\t\t" +
-                getWord(ADMIN_HOMES_INFO_NUMBER_OF_INTERESTED, lan) + home.getInterests() + "\n" +
+                ADMIN_HOMES_INFO_NUMBER_OF_INTERESTED + home.getInterests() + "\n" +
                 getWord(STATUS, lan) + "\t" + getWord(home.getStatus().equals(HomeStatus.SELL) ? SELL : RENT, lan) + "\n" +
-                getWord(ADMIN_HOMES_INFO_REGION, lan) + home.getRegion() + "\n" +
-                getWord(ADMIN_HOMES_INFO_DISTRICT, lan) + (home.getDistrict() != null ? home.getDistrict() : " ") + "\n" +
+                getWord(ADMIN_HOMES_INFO_REGION, lan) + getWord(home.getRegion().name(),lan) + "\n" +
+                getWord(ADMIN_HOMES_INFO_DISTRICT, lan) + getWord(home.getDistrict().name(),lan) + "\n" +
                 getWord(ADDRESS, lan) + home.getAddress() + "\n" +
                 getWord(NUMBER_OF_ROOMS, lan) + home.getNumberOfRooms() + "\n" +
                 getWord(AREA, lan) + home.getArea() + " m²" + "\n" +
@@ -1060,7 +1062,7 @@ public class BotService {
         row2.add(KeyboardService.getInlineButton(backName, getWord(BACK, lan)));
         row2.add(KeyboardService.getInlineButton(BACK_TO_MAIN_MENU_SEND, getWord(MENU, lan)));
         row1.add(phoneButton);
-        row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan)));
+        row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan),home.getDetailsPath()));
         if (state.equals(BotState.CHANGE_HOME_LIKE_MENU_MY_ACCOMMODATIONS)) {
             row1.add(likeButton);
             row2.add(1, KeyboardService.getInlineButton(DELETE + home.getId(), DELETE));
@@ -1378,7 +1380,7 @@ public class BotService {
                     + " " + (like.isActive() ? LIKE_ACTIVE : LIKE_NOT_ACTIVE));
             likeButton.setCallbackData(LIKE + like.getId().toString());
             row1.add(phoneButton);
-            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan)));
+            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan),home.getDetailsPath()));
             row2.add(likeButton);
             sendPhoto.setReplyMarkup(markup);
         }
@@ -1464,7 +1466,7 @@ public class BotService {
                     + " " + (like.isActive() ? LIKE_ACTIVE : LIKE_NOT_ACTIVE));
             likeButton.setCallbackData(LIKE + like.getId().toString());
             row1.add(phoneButton);
-            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan)));
+            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan),home.getDetailsPath()));
             row2.add(likeButton);
             sendPhoto.setReplyMarkup(markup);
         }
@@ -1529,7 +1531,7 @@ public class BotService {
 
 
             row1.add(phoneButton);
-            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan)));
+            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan),home.getDetailsPath()));
             row1.add(likeButton);
             row2.add(deleteButton);
             sendPhoto.setReplyMarkup(markup);

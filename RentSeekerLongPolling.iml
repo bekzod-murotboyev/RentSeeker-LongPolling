@@ -87,7 +87,6 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-web:5.3.16" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-webmvc:5.3.16" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-expression:5.3.16" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: mysql:mysql-connector-java:8.0.28" level="project" />
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.22" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-starter-test:2.6.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test:2.6.4" level="project" />
@@ -150,9 +149,6 @@
     <orderEntry type="library" name="Maven: org.glassfish.jersey.core:jersey-server:2.35" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.jersey.core:jersey-client:2.35" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20180813" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.13" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.15" level="project" />
-    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.15" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpmime:4.5.13" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.11.0" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:2.6.4" level="project" />
@@ -168,7 +164,6 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-aop:5.3.16" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-config:5.6.2" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-core:5.6.2" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-crypto:5.6.2" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-web:5.6.2" level="project" />
     <orderEntry type="library" name="Maven: io.jsonwebtoken:jjwt:0.9.1" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.13.1" level="project" />
@@ -198,5 +193,28 @@
     <orderEntry type="library" name="Maven: org.modelmapper:modelmapper:3.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.postgresql:postgresql:42.3.3" level="project" />
     <orderEntry type="library" name="Maven: org.checkerframework:checker-qual:3.5.0" level="project" />
+    <orderEntry type="library" name="Maven: org.telegram:telegraph:1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.telegram:telegraph-meta:1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.inject:guice:4.1.0" level="project" />
+    <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
+    <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
+    <orderEntry type="library" name="Maven: javax.validation:validation-api:2.0.1.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.13" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.15" level="project" />
+    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.15" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter-openfeign:3.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter:3.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-context:3.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-rsa:1.0.10.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.bouncycastle:bcpkix-jdk15on:1.68" level="project" />
+    <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-jdk15on:1.68" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-openfeign-core:3.1.1" level="project" />
+    <orderEntry type="library" name="Maven: io.github.openfeign.form:feign-form-spring:3.8.0" level="project" />
+    <orderEntry type="library" name="Maven: io.github.openfeign.form:feign-form:3.8.0" level="project" />
+    <orderEntry type="library" name="Maven: commons-fileupload:commons-fileupload:1.4" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-commons:3.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-crypto:5.6.2" level="project" />
+    <orderEntry type="library" name="Maven: io.github.openfeign:feign-core:11.8" level="project" />
+    <orderEntry type="library" name="Maven: io.github.openfeign:feign-slf4j:11.8" level="project" />
   </component>
 </module>

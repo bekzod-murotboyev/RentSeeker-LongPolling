@@ -70,7 +70,6 @@ public class LanguageService implements Constant {
             case ADMIN_HOMES_INFO_DESCRIPTION:
                 return ADMIN_HOMES_INFO_DESCRIPTION_UZ;
             case ADMIN_HOMES_INFO_NUMBER_OF_INTERESTED:
-                return ADMIN_HOMES_INFO_NUMBER_OF_INTERESTED_UZ;
             case ADMIN_HOMES_INFO_MAP_URL:
                 return ADMIN_HOMES_INFO_MAP_URL_UZ;
             case ADMIN_HOMES_FILTER_MENU_TEXT:
@@ -232,10 +231,10 @@ public class LanguageService implements Constant {
                 return CHECK_USER_BY_ADMIN_TEXT_UZ;
             case BAN_MENU_TEXT:return BAN_MENU_TEXT_UZ;
             case NEXT_ACTION:return NEXT_ACTION_UZ;
-            case HOME_PHOTOS:return HOME_PHOTOS_UZ;
             case IT_HAS_ONLY_ONE_PIC:return IT_HAS_ONLY_ONE_PIC_UZ;
             case FIRST_PAGE_NOTIFICATION:return FIRST_PAGE_NOTIFICATION_UZ;
             case LAST_PAGE_NOTIFICATION:return LAST_PAGE_NOTIFICATION_UZ;
+            case HOME_PHOTOS:return HOME_PHOTOS_UZ;
 
 
             case TASHKENT:
@@ -662,7 +661,6 @@ public class LanguageService implements Constant {
             case ADMIN_HOMES_INFO_DESCRIPTION:
                 return ADMIN_HOMES_INFO_DESCRIPTION_RU;
             case ADMIN_HOMES_INFO_NUMBER_OF_INTERESTED:
-                return ADMIN_HOMES_INFO_NUMBER_OF_INTERESTED_RU;
             case ADMIN_HOMES_INFO_MAP_URL:
                 return ADMIN_HOMES_INFO_MAP_URL_RU;
             case ADMIN_HOMES_FILTER_MENU_TEXT:

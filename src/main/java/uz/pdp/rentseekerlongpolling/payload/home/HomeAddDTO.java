@@ -1,4 +1,4 @@
-package uz.pdp.rentseekerlongpolling.payload;
+package uz.pdp.rentseekerlongpolling.payload.home;
 
 
 import lombok.*;

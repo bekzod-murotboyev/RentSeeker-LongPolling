@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.pdp.rentseekerlongpolling.entity.User;
-import uz.pdp.rentseekerlongpolling.payload.ApiResponse;
+import uz.pdp.rentseekerlongpolling.payload.response.ApiResponse;
 import uz.pdp.rentseekerlongpolling.payload.LanStateDTO;
 import uz.pdp.rentseekerlongpolling.repository.UserRepository;
 import uz.pdp.rentseekerlongpolling.util.enums.BotState;
