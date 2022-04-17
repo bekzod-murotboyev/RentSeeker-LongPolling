@@ -27,10 +27,10 @@ public class SearchDTO  {
 
     HomeType homeType;
 
-    Integer numberOfRooms = -1;
+    Integer numberOfRooms;
 
-    Integer minPrice = -1;
+    Double minPrice;
 
-    Integer maxPrice = -1;
+    Double maxPrice;
 
 }

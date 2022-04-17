@@ -20,16 +20,15 @@ import javax.persistence.Enumerated;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity(name = "users")
-public class User extends BaseModel  {
+public class User extends BaseModel {
 
     String name;
 
-    @Column(unique = true)
     String phoneNumber;
 
-    @Column(unique = true)
     String username;
 
+    @Column(unique = true)
     String chatId;
 
     String code;

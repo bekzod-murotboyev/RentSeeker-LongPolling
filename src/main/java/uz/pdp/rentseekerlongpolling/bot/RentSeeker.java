@@ -3,15 +3,14 @@ package uz.pdp.rentseekerlongpolling.bot;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMediaGroup;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import uz.pdp.rentseekerlongpolling.payload.home.HomePageableDTO;
 import uz.pdp.rentseekerlongpolling.payload.LanStateDTO;
+import uz.pdp.rentseekerlongpolling.payload.home.HomePageableDTO;
 import uz.pdp.rentseekerlongpolling.service.AdminBotService;
 import uz.pdp.rentseekerlongpolling.service.BotService;
 import uz.pdp.rentseekerlongpolling.service.LanguageService;
@@ -23,9 +22,9 @@ import uz.pdp.rentseekerlongpolling.util.security.BaseData;
 
 import java.util.List;
 
-import static uz.pdp.rentseekerlongpolling.util.constant.Constant.*;
 import static uz.pdp.rentseekerlongpolling.util.constant.Constant.CHANGE_LANGUAGE;
 import static uz.pdp.rentseekerlongpolling.util.constant.Constant.MY_FAVOURITES;
+import static uz.pdp.rentseekerlongpolling.util.constant.Constant.*;
 import static uz.pdp.rentseekerlongpolling.util.enums.BotState.*;
 import static uz.pdp.rentseekerlongpolling.util.security.BaseData.*;
 
@@ -415,9 +414,11 @@ public class RentSeeker extends TelegramLongPollingBot {
             }
             break;
             case SAVE_HOME_TO_STORE: {
-                botService.saveHomeDescription(update, state);
-                execute(botService.successfullySaved(update, lan));
-                execute(botService.setMenuSend(update, lan, role));
+                if (botService.saveHomeDescription(update, state)) {
+                    execute(botService.successfullySaved(update, lan));
+                    execute(botService.setMenuSend(update, lan, role));
+                } else
+                    execute(botService.sendLimitationError(update, lan));
             }
             break;
             case SHOW_MENU_SEND:
@@ -496,8 +497,6 @@ public class RentSeeker extends TelegramLongPollingBot {
                 break;
             case CHOOSE_HOME_NUMBER_EDIT:
                 execute(botService.chooseHomeNumberEdit(update, lan));
-                break;
-            case CHOOSE_HOME_NUMBER_SEND:
                 break;
             case CHOOSE_HOME_MIN_PRICE_SEND: {
                 if (botService.saveSearchNumber(update)) {

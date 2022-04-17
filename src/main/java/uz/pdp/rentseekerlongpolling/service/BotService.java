@@ -24,7 +24,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import uz.pdp.rentseekerlongpolling.component.EmailComponent;
 import uz.pdp.rentseekerlongpolling.entity.User;
 import uz.pdp.rentseekerlongpolling.entity.*;
-import uz.pdp.rentseekerlongpolling.feign.TelegramFileFeign;
+import uz.pdp.rentseekerlongpolling.feign.TelegramFeign;
 import uz.pdp.rentseekerlongpolling.model.locationModels.LocationsItem;
 import uz.pdp.rentseekerlongpolling.payload.home.HomePageableDTO;
 import uz.pdp.rentseekerlongpolling.payload.telegram.simple_telegram.FileDataDTO;
@@ -37,6 +37,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static uz.pdp.rentseekerlongpolling.service.LanguageService.getWord;
+import static uz.pdp.rentseekerlongpolling.util.Url.*;
 import static uz.pdp.rentseekerlongpolling.util.constant.Constant.*;
 import static uz.pdp.rentseekerlongpolling.util.enums.BotState.SHOW_HOME_PHONE_MENU_ALL;
 
@@ -62,7 +63,7 @@ public class BotService {
 
     private final ModelMapper modelMapper;
 
-    private final TelegramFileFeign telegramFileFeign;
+    private final TelegramFeign telegramFeign;
 
 
     public AnswerCallbackQuery getAnswerCallbackQuery(CallbackQuery query, String text, Language lan) {
@@ -492,8 +493,8 @@ public class BotService {
     public void saveHomePhoto(Update update, BotState state) {
         Message message = update.getMessage();
         PhotoSize photoSize = message.getPhoto().get(message.getPhoto().size() - 1);
-        FileDataDTO filePath = telegramFileFeign.getFilePath(photoSize.getFileId());
-        photoSize.setFilePath(filePath.getResult().getFilePath());
+        FileDataDTO filePath = telegramFeign.getFilePath(photoSize.getFileId());
+        photoSize.setFilePath(TELEGRAM_BASE+TELEGRAM_GET_FILE+filePath.getResult().getFilePath());
         Home home = new Home();
         User user = userService.getByChatId(message.getChatId().toString());
         home.setAttachments(List.of(modelMapper.map(photoSize, Attachment.class)));
@@ -519,14 +520,15 @@ public class BotService {
         return true;
     }
 
-    public void saveHomeDescription(Update update, BotState state) {
+    public boolean saveHomeDescription(Update update, BotState state) {
         Message message = update.getMessage();
         String text = message.getText();
         User user = userService.getByChatId(message.getChatId().toString());
         Home home = new Home();
         home.setUser(user);
         home.setDescription(text);
-        homeService.addHome(home, user.getChatId(), state);
+        return homeService.addHome(home, user.getChatId(), state);
+
     }
     //
 
@@ -540,20 +542,16 @@ public class BotService {
 
         if (query.getData().equals(SKIP) || query.getData().contains(BACK)) {
             search.setRegion(null);
-            searchService.addSearch(search);
-            return null;
         } else {
             try {
                 Region region = Region.valueOf(query.getData());
                 search.setRegion(region);
-                searchService.addSearch(search);
-                return region;
             } catch (Exception e) {
                 search.setRegion(null);
-                searchService.addSearch(search);
-                return null;
             }
         }
+        searchService.addSearch(search);
+        return search.getRegion();
 
     }
 
@@ -566,7 +564,8 @@ public class BotService {
             search = new Search();
             search.setUser(user);
         }
-        search.setDistrict(query.getData().equals(SKIP) || query.getData().contains("BACK") ? null : District.valueOf(query.getData()));
+        search.setDistrict(query.getData().equals(SKIP) || query.getData().contains("BACK") ?
+                null : District.valueOf(query.getData().toUpperCase()));
         searchService.addSearch(search);
     }
 
@@ -590,7 +589,8 @@ public class BotService {
             search = new Search();
             search.setUser(user);
         }
-        search.setHomeType(query.getData().equals(SKIP) || query.getData().contains("BACK") ? null : HomeType.valueOf(query.getData().toUpperCase()));
+        search.setHomeType(query.getData().equals(SKIP) || query.getData().contains("BACK") ?
+                null : HomeType.valueOf(query.getData().toUpperCase()));
         searchService.addSearch(search);
     }
 
@@ -605,7 +605,7 @@ public class BotService {
         if (update.hasCallbackQuery()) {
             String data = update.getCallbackQuery().getData();
             if (data.contains("BACK"))
-                search.setNumberOfRooms(-1);
+                search.setNumberOfRooms(null);
             searchService.addSearch(search);
             return true;
         }
@@ -633,7 +633,7 @@ public class BotService {
             String data = update.getCallbackQuery().getData();
 
             if (data.contains("BACK"))
-                search.setMinPrice(-1);
+                search.setMinPrice(null);
 
             searchService.addSearch(search);
             return true;
@@ -661,7 +661,7 @@ public class BotService {
         if (update.hasCallbackQuery()) {
             String data = update.getCallbackQuery().getData();
             if (data.contains("BACK"))
-                search.setMaxPrice(-1);
+                search.setMaxPrice(null);
             searchService.addSearch(search);
             return true;
 
@@ -939,11 +939,11 @@ public class BotService {
             sendPhoto = new SendPhoto(message.getChatId().toString(), new InputFile(home.getAttachments().get(0).getFileId()));
             sendPhoto.setCaption(getCaptionByHome(home, lan));
             sendPhoto.setReplyMarkup(markup);
-            Like like = likeService.getLikeByHomeIdAndUserId(home, user);
+            Like like = likeService.getLikeByHomeAndUser(home, user);
             row1.add(KeyboardService.getInlineButton(PHONE + home.getId(),
                     interestService.getVisible(home, user) ? userService.getById(home.getUser().getId()).getPhoneNumber()
                             : getWord(GET_PHONE_NUMBER, lan)));
-            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan),home.getDetailsPath()));
+            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan), home.getDetailsPath()));
             row1.add(KeyboardService
                     .getInlineButton(LIKE + like.getId(),
                             home.getLikes()
@@ -991,7 +991,7 @@ public class BotService {
         rowList.add(row2);
 
         User user = userService.getByChatId(message.getChatId().toString());
-        Like like = likeService.getLikeByHomeIdAndUserId(home, user);
+        Like like = likeService.getLikeByHomeAndUser(home, user);
 
 
         InlineKeyboardButton likeButton = KeyboardService.getInlineButton(LIKE + like.getId().toString(),
@@ -1000,7 +1000,7 @@ public class BotService {
         row1.add(KeyboardService.getInlineButton(PHONE + home.getId().toString(),
                 interestService.changeVisible(home, user) ?
                         userService.getById(home.getUser().getId()).getPhoneNumber() : getWord(GET_PHONE_NUMBER, lan)));
-        row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan),home.getDetailsPath()));
+        row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan), home.getDetailsPath()));
         row2.add(KeyboardService.getInlineButton(backName, getWord(BACK, lan)));
         row2.add(KeyboardService.getInlineButton(BACK_TO_MAIN_MENU_SEND, getWord(MENU, lan)));
 
@@ -1028,8 +1028,8 @@ public class BotService {
         return getWord(HOUSE_TYPE, lan) + "\t" + getWord(home.getHomeType().equals(HomeType.HOUSE) ? HOUSE : FLAT, lan) + "\t\t\t\t\t\t\t\t\t\t" +
                 ADMIN_HOMES_INFO_NUMBER_OF_INTERESTED + home.getInterests() + "\n" +
                 getWord(STATUS, lan) + "\t" + getWord(home.getStatus().equals(HomeStatus.SELL) ? SELL : RENT, lan) + "\n" +
-                getWord(ADMIN_HOMES_INFO_REGION, lan) + getWord(home.getRegion().name(),lan) + "\n" +
-                getWord(ADMIN_HOMES_INFO_DISTRICT, lan) + getWord(home.getDistrict().name(),lan) + "\n" +
+                getWord(ADMIN_HOMES_INFO_REGION, lan) + getWord(home.getRegion().name(), lan) + "\n" +
+                getWord(ADMIN_HOMES_INFO_DISTRICT, lan) + getWord(home.getDistrict().name(), lan) + "\n" +
                 getWord(ADDRESS, lan) + home.getAddress() + "\n" +
                 getWord(NUMBER_OF_ROOMS, lan) + home.getNumberOfRooms() + "\n" +
                 getWord(AREA, lan) + home.getArea() + " m²" + "\n" +
@@ -1040,10 +1040,8 @@ public class BotService {
 
     public EditMessageCaption changeHomeLike(Update update, Language lan, String backName, BotState state) {
         Message message = update.getCallbackQuery().getMessage();
-        Like like = likeService.getById(UUID.fromString(update.getCallbackQuery().getData()));
-        User user = userService.getByChatId(message.getChatId().toString());
-        Home home = homeService.getById(like.getHome().getId());
-        like = likeService.changeLike(like, home);
+
+        Like like = likeService.changeLike(UUID.fromString(update.getCallbackQuery().getData()));
 
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
@@ -1053,19 +1051,19 @@ public class BotService {
         rowList.add(row1);
         rowList.add(row2);
 
-        InlineKeyboardButton phoneButton = KeyboardService.getInlineButton(PHONE + home.getId().toString(), interestService.getVisible(home, user) ?
-                userService.getById(home.getUser().getId()).getPhoneNumber() : getWord(GET_PHONE_NUMBER, lan));
-        InlineKeyboardButton likeButton = KeyboardService.getInlineButton(LIKE + like.getId().toString(), home.getLikes()
+        InlineKeyboardButton phoneButton = KeyboardService.getInlineButton(PHONE + like.getHome().getId().toString(), interestService.getVisible(like.getHome(), like.getUser()) ?
+                userService.getById(like.getHome().getUser().getId()).getPhoneNumber() : getWord(GET_PHONE_NUMBER, lan));
+        InlineKeyboardButton likeButton = KeyboardService.getInlineButton(LIKE + like.getId().toString(), like.getHome().getLikes()
                 + " " + (like.isActive() ? LIKE_ACTIVE : LIKE_NOT_ACTIVE));
 
 
         row2.add(KeyboardService.getInlineButton(backName, getWord(BACK, lan)));
         row2.add(KeyboardService.getInlineButton(BACK_TO_MAIN_MENU_SEND, getWord(MENU, lan)));
         row1.add(phoneButton);
-        row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan),home.getDetailsPath()));
+        row1.add(KeyboardService.getInlineButton(PHOTOS + like.getHome().getId(), getWord(HOME_PHOTOS, lan), like.getHome().getDetailsPath()));
         if (state.equals(BotState.CHANGE_HOME_LIKE_MENU_MY_ACCOMMODATIONS)) {
             row1.add(likeButton);
-            row2.add(1, KeyboardService.getInlineButton(DELETE + home.getId(), DELETE));
+            row2.add(1, KeyboardService.getInlineButton(DELETE + like.getHome().getId(), DELETE));
         } else if (state.equals(BotState.CHANGE_HOME_LIKE_MENU_ALL)) {
             row1.add(likeButton);
             row2.add(0, KeyboardService.getInlineButton(PREV, PREV));
@@ -1077,7 +1075,7 @@ public class BotService {
         EditMessageCaption editMessageCaption = new EditMessageCaption();
         editMessageCaption.setMessageId(message.getMessageId());
         editMessageCaption.setChatId(message.getChatId().toString());
-        editMessageCaption.setCaption(getCaptionByHome(home, lan));
+        editMessageCaption.setCaption(getCaptionByHome(like.getHome(), lan));
         editMessageCaption.setReplyMarkup(markup);
         return editMessageCaption;
     }
@@ -1368,7 +1366,7 @@ public class BotService {
             sendPhoto.setChatId(message.getChatId().toString());
             sendPhoto.setCaption(getCaptionByHome(home, lan));
 
-            Like like = likeService.getLikeByHomeIdAndUserId(home, user);
+            Like like = likeService.getLikeByHomeAndUser(home, user);
 
             InlineKeyboardButton phoneButton =
                     new InlineKeyboardButton(interestService.getVisible(home, user) ?
@@ -1380,7 +1378,7 @@ public class BotService {
                     + " " + (like.isActive() ? LIKE_ACTIVE : LIKE_NOT_ACTIVE));
             likeButton.setCallbackData(LIKE + like.getId().toString());
             row1.add(phoneButton);
-            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan),home.getDetailsPath()));
+            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan), home.getDetailsPath()));
             row2.add(likeButton);
             sendPhoto.setReplyMarkup(markup);
         }
@@ -1454,7 +1452,7 @@ public class BotService {
             sendPhoto.setChatId(message.getChatId().toString());
             sendPhoto.setCaption(getCaptionByHome(home, lan));
 
-            Like like = likeService.getLikeByHomeIdAndUserId(home, user);
+            Like like = likeService.getLikeByHomeAndUser(home, user);
 
             InlineKeyboardButton phoneButton =
                     new InlineKeyboardButton(interestService.getVisible(home, user) ?
@@ -1466,7 +1464,7 @@ public class BotService {
                     + " " + (like.isActive() ? LIKE_ACTIVE : LIKE_NOT_ACTIVE));
             likeButton.setCallbackData(LIKE + like.getId().toString());
             row1.add(phoneButton);
-            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan),home.getDetailsPath()));
+            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan), home.getDetailsPath()));
             row2.add(likeButton);
             sendPhoto.setReplyMarkup(markup);
         }
@@ -1515,7 +1513,7 @@ public class BotService {
             sendPhoto.setChatId(message.getChatId().toString());
             sendPhoto.setCaption(getCaptionByHome(home, lan));
 
-            Like like = likeService.getLikeByHomeIdAndUserId(home, user);
+            Like like = likeService.getLikeByHomeAndUser(home, user);
 
             InlineKeyboardButton phoneButton =
                     new InlineKeyboardButton(interestService.getVisible(home, user) ?
@@ -1531,7 +1529,7 @@ public class BotService {
 
 
             row1.add(phoneButton);
-            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan),home.getDetailsPath()));
+            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan), home.getDetailsPath()));
             row1.add(likeButton);
             row2.add(deleteButton);
             sendPhoto.setReplyMarkup(markup);
@@ -1606,4 +1604,9 @@ public class BotService {
         return new SendMediaGroup(query.getMessage().getChatId().toString(), mediaPhotos);
     }
 
+    public SendMessage sendLimitationError(Update update, Language lan) {
+        SendMessage sendMessage=new SendMessage(getMessage(update).getChatId().toString(), getWord(LIMITATION_ERROR, lan));
+        sendMessage.setReplyMarkup(KeyboardService.createInlineMarkup(List.of(List.of(MENU)), lan));
+        return sendMessage;
+    }
 }

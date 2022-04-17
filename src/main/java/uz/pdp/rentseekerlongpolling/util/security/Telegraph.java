@@ -5,6 +5,7 @@ public interface Telegraph {
     String BASE="https://api.telegra.ph/";
 
     String CREATE_PAGE="createPage";
+    String EDIT_PAGE="editPage";
 
     String GET_PAGE="/getPage";
 }

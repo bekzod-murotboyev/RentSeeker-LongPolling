@@ -9,11 +9,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.telegram.telegraph.api.methods.CreatePage;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.telegram.telegraph.api.objects.Node;
 import org.telegram.telegraph.api.objects.NodeElement;
 import org.telegram.telegraph.api.objects.NodeText;
-import uz.pdp.rentseekerlongpolling.entity.Attachment;
 import uz.pdp.rentseekerlongpolling.entity.Home;
 import uz.pdp.rentseekerlongpolling.entity.Like;
 import uz.pdp.rentseekerlongpolling.entity.User;
@@ -22,14 +21,12 @@ import uz.pdp.rentseekerlongpolling.payload.response.ApiResponse;
 import uz.pdp.rentseekerlongpolling.payload.home.HomeAddDTO;
 import uz.pdp.rentseekerlongpolling.payload.home.HomeEditDTO;
 import uz.pdp.rentseekerlongpolling.payload.SearchDTO;
-import uz.pdp.rentseekerlongpolling.payload.telegram.telegraph.CreatedPageDTO;
 import uz.pdp.rentseekerlongpolling.repository.HomeRepository;
 import uz.pdp.rentseekerlongpolling.util.enums.BotState;
 import uz.pdp.rentseekerlongpolling.util.enums.HomeStatus;
 import uz.pdp.rentseekerlongpolling.util.enums.HomeType;
 import uz.pdp.rentseekerlongpolling.util.enums.Language;
 import uz.pdp.rentseekerlongpolling.util.security.BaseData;
-import uz.pdp.rentseekerlongpolling.util.security.Telegraph;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -54,7 +51,14 @@ public class HomeService {
 
     private final TelegraphFeign telegraphFeign;
 
-    public void addHome(Home home, String chatId, BotState state) {
+    private final ObjectMapper objectMapper;
+
+    private final AttachmentService attachmentService;
+
+    private final LikeService likeService;
+
+
+    public boolean addHome(Home home, String chatId, BotState state) {
         Home crtHome = getNoActiveHomeByChatId(chatId);
         if (state == null) {
             if (crtHome != null)
@@ -62,7 +66,7 @@ public class HomeService {
             home.setCreatedDate(LocalDateTime.now());
             home.setUpdatedDate(LocalDateTime.now());
             homeRepository.save(home);
-            return;
+            return true;
         }
 
         if (crtHome != null) switch (state) {
@@ -96,13 +100,18 @@ public class HomeService {
                 break;
             case SAVE_HOME_TO_STORE: {
                 crtHome.setDescription(home.getDescription());
-                crtHome.setDetailsPath(getDetailsPath(crtHome));
+                String detailsPath = getDetailsPath(crtHome);
+                if (detailsPath == null)
+                    return false;
+
+                crtHome.setDetailsPath(detailsPath);
                 crtHome.setActive(true);
             }
             break;
         }
         if (crtHome != null)
             homeRepository.save(crtHome);
+        return true;
     }
 
     public void saveHomeByLocation(Home home, String chatId) {
@@ -114,10 +123,6 @@ public class HomeService {
         homeRepository.save(homeByChatId);
     }
 
-    public void changeCountOfLike(Like like, Home home) {
-        home.setLikes(like.isActive() ? home.getLikes() + 1 : home.getLikes() - 1);
-        homeRepository.save(home);
-    }
 
     public void changeCountOfInterest(Home home) {
         home.setInterests(home.getInterests() + 1);
@@ -216,43 +221,45 @@ public class HomeService {
                 new ApiResponse(true, SUCCESS, homes);
     }
 
-    public ApiResponse searchHome(SearchDTO search) {
-        List<Home> homes = new ArrayList<>();
-        for (Home home : homeRepository.findByActive(true)) {
-            if (search.getRegion() != null)
-                if (search.getRegion().equals(home.getRegion())) {
-                    if (search.getDistrict() != null)
-                        if (!search.getDistrict().equals(home.getDistrict()))
-                            continue;
-                } else continue;
 
-            if (search.getHomeType() != null)
-                if (!home.getHomeType().equals(search.getHomeType()))
-                    continue;
-            if (search.getStatus() != null)
-                if (!search.getStatus().equals(home.getStatus()))
-                    continue;
-            if (search.getNumberOfRooms() != -1)
-                if (search.getNumberOfRooms() != home.getNumberOfRooms())
-                    continue;
-            if (search.getMinPrice() != -1)
-                if (search.getMinPrice() > home.getPrice())
-                    continue;
-            if (search.getMaxPrice() != -1)
-                if (search.getMaxPrice() < home.getPrice())
-                    continue;
-            homes.add(home);
-        }
+    public ApiResponse getFavouriteHomesByUserId(UUID userId, Integer page, Integer size) {
+        List<Home> homes = likeService
+                .getActiveHomesByUserId(userId, PageRequest.of(page, size, Sort.by("createdDate").ascending()));
         return homes.isEmpty() ? new ApiResponse(false, NOT_FOUND) :
                 new ApiResponse(true, SUCCESS, homes);
     }
 
-    public ApiResponse addHome(HomeAddDTO homeAddDTO) {
-        Home home = modelMapper.map(homeAddDTO, Home.class);
+    public ApiResponse searchHome(SearchDTO searchDTO) {
+        List<Home> homes = searchHomes(searchDTO);
+        return homes.isEmpty() ? new ApiResponse(false, NOT_FOUND) :
+                new ApiResponse(true, SUCCESS, homes);
+    }
+
+
+    public List<Home> searchHomes(SearchDTO searchDTO) {
+        return homeRepository.searchHomes(
+                searchDTO.getRegion() == null ? "" : searchDTO.getRegion().name(),
+                searchDTO.getDistrict() == null ? "" : searchDTO.getDistrict().name(),
+                searchDTO.getStatus() == null ? "" : searchDTO.getStatus().name(),
+                searchDTO.getHomeType() == null ? "" : searchDTO.getHomeType().name(),
+                searchDTO.getNumberOfRooms() == null ? -1 : searchDTO.getNumberOfRooms(),
+                searchDTO.getMinPrice() == null ? -1 : searchDTO.getMinPrice(),
+                searchDTO.getMaxPrice() == null ? -1 : searchDTO.getMaxPrice());
+    }
+
+    public ApiResponse addHome(MultipartHttpServletRequest request) throws JsonProcessingException {
+        HomeAddDTO homeAddDTO = objectMapper.readValue(request.getParameter("homeAddDTO"), HomeAddDTO.class);
+        if (homeAddDTO == null)
+            return new ApiResponse(false, "Invalid data");
         User user = userService.getById(homeAddDTO.getUserId());
         if (user == null)
             return new ApiResponse(false, USER_NOT_FOUND);
+        Home home = modelMapper.map(homeAddDTO, Home.class);
+        home.setAttachments(attachmentService.saveToFile(request));
         home.setUser(user);
+        String detailsPath = getDetailsPath(home);
+        if (detailsPath == null) return new ApiResponse(false, "Invalid data");
+        home.setDetailsPath(detailsPath);
         home.setActive(true);
         return new ApiResponse(true, SUCCESS, homeRepository.save(home));
     }
@@ -264,6 +271,19 @@ public class HomeService {
         Home home = optionalHome.get();
         modelMapper.map(homeEditDTO, home);
         return new ApiResponse(true, SUCCESS, homeRepository.save(home));
+    }
+
+
+    public ApiResponse editHomeLike(UUID homeId, UUID userId) {
+        Like like = likeService.changeLike(homeId, userId);
+        return like!=null?new ApiResponse(true,SUCCESS,like):
+                new ApiResponse(false,NOT_FOUND);
+    }
+
+    public ApiResponse editHomeLike(UUID likeId) {
+        Like like = likeService.changeLike(likeId);
+        return like!=null?new ApiResponse(true,SUCCESS,like):
+                new ApiResponse(false,NOT_FOUND);
     }
 
 
@@ -284,12 +304,15 @@ public class HomeService {
 
     @SneakyThrows
     private String getDetailsPath(Home home) {
-        return telegraphFeign.createPage(
-                ACCESS_TOKEN,
-                BaseData.NAME,
-                new ObjectMapper().writeValueAsString(getNodeList(home, home.getUser().getLanguage()))
-        ).getResult().getPath();
-
+        try {
+            return telegraphFeign.createPage(
+                    ACCESS_TOKEN,
+                    NAME,
+                    new ObjectMapper().writeValueAsString(getNodeList(home, home.getUser().getLanguage()))
+            ).getResult().getUrl();
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
     public List<Node> getNodeList(Home home, Language lan) {
@@ -297,7 +320,7 @@ public class HomeService {
                 "img",
                 Map.of(
                         "src",
-                        BaseData.TELEGRAM_GET_FILE + item.getFilePath(),
+                        item.getFilePath(),
                         "style",
                         "margin-bottom: 50px"
 
@@ -311,14 +334,13 @@ public class HomeService {
         addRowStaticData(nodeElements, ADDRESS, home.getAddress(), lan);
         addRowStaticData(nodeElements, NUMBER_OF_ROOMS, String.valueOf(home.getNumberOfRooms()), lan);
         addRowStaticData(nodeElements, AREA, home.getArea() + " m²", lan);
-        addRowStaticData(nodeElements, DATE, DateTimeFormatter.ofPattern("dd/MM/yyyy").format(home.getCreatedDate()), lan);
+        addRowStaticData(nodeElements, DATE, DateTimeFormatter.ofPattern("dd/MM/yyyy").format(home.getCreatedDate() == null ? LocalDateTime.now() : home.getCreatedDate()), lan);
         addRowStaticData(nodeElements, ADMIN_HOMES_INFO_PRICE, home.getPrice() + " $", lan);
         addRowStaticData(nodeElements, DESCRIPTION, home.getDescription(), lan);
         nodeElements.add(home.getUser().getUsername() == null ? getH4("☎️ +998" + home.getUser().getPhoneNumber()) :
                 getH4WithA("https://t.me/" + home.getUser().getUsername(), "☎️ +998" + home.getUser().getPhoneNumber()));
         nodeElements.add(getBr());
         nodeElements.add(getA("https://t.me/" + BaseData.USERNAME, "@" + BaseData.USERNAME));
-
 
         return nodeElements;
     }
@@ -334,13 +356,6 @@ public class HomeService {
         nodeElements.add(getItalicParagraph(data));
         nodeElements.add(getBr());
     }
-
-    public void addRowStatic(List<Node> nodeElements, String type, String data) {
-        nodeElements.add(getBold(type));
-        nodeElements.add(getItalicParagraph(data));
-        nodeElements.add(getBr());
-    }
-
 
     private Node getH3(String text) {
         return new NodeElement("h3", null, List.of(new NodeText(text)));

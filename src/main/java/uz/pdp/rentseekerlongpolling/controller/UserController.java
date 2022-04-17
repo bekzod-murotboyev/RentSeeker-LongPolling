@@ -16,6 +16,7 @@ public class UserController {
 
     private final UserService userService;
 
+
     @GetMapping(USER_ACTIVE)
     public String getActiveUsers(Model model){
         model.addAttribute("response",userService.getUsers(true));

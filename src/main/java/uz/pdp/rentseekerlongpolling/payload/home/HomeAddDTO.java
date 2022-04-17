@@ -3,6 +3,7 @@ package uz.pdp.rentseekerlongpolling.payload.home;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import uz.pdp.rentseekerlongpolling.entity.Attachment;
 import uz.pdp.rentseekerlongpolling.util.enums.District;
 import uz.pdp.rentseekerlongpolling.util.enums.HomeStatus;
@@ -51,8 +52,5 @@ public class HomeAddDTO {
     String description;
 
     String mapUrl;
-
-    @NotNull
-    List<Attachment> attachments;
 
 }

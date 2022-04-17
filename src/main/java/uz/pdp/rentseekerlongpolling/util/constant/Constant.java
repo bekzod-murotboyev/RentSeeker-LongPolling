@@ -2,6 +2,9 @@ package uz.pdp.rentseekerlongpolling.util.constant;
 
 public interface Constant {
 
+    String NAME = "\uD83C\uDD78\uD83C\uDD79\uD83C\uDD70\uD83C\uDD81\uD83C\uDD70\uD83C\uDD72\uD83C\uDD77\uD83C\uDD78";
+
+
     //CHANGES 14.12.21
     //ADMIN TEXT ABOVE BUTTONS
     String ADMIN="\uD83E\uDE96 Admin";
@@ -503,6 +506,10 @@ public interface Constant {
     String BAN_MENU_TEXT_RU="Вы были заблокированы администратором по какой-то причине!";
     String BAN_MENU_TEXT_UZ="Ba'zi sabablarga ko'ra admin tomonidan taqiqlangansiz!";
 
+    String LIMITATION_ERROR="❗️Conflict. Please, reduce your entered data!";
+    String LIMITATION_ERROR_RU="❗️️Ошибка. Пожалуйста, сократите количество вводимой информации!";
+    String LIMITATION_ERROR_UZ="❗Xatolik. Iltioms, kiritilgan ma'lumotlarni qisqarting!";
+
     String ERROR="❗️ ❗️ ❗️";
     String PHONE="PHONE";
     String PHOTOS="PHOTOS";
@@ -588,7 +595,7 @@ public interface Constant {
 
     // REGIONS
     String TASHKENT="TASHKENT";
-    String TASHKENT_REGION="TASHKENT REGION";
+    String TASHKENT_REGION="TASHKENT_REGION";
     String ANDIJAN="ANDIJAN";
     String BUKHARA="BUKHARA";
     String DZHIZAK="DZHIZAK";
@@ -600,13 +607,13 @@ public interface Constant {
     String SYRDARYA="SYRDARYA";
     String FERGHANA="FERGHANA";
     String XORAZM="XORAZM";
-    String REPUBLIC_OF_KARAKALPAKSTAN="REPUBLIC OF KARAKALPAKSTAN";
+    String REPUBLIC_OF_KARAKALPAKSTAN="REPUBLIC_OF_KARAKALPAKSTAN";
 
     // DISTRICTS
     String OLMAZOR="OLMAZOR";
     String BEKTEMIR="BEKTEMIR";
     String MIROBOD="MIROBOD";
-    String MIRZO_ULUGBEK="MIRZO ULUGBEK";
+    String MIRZO_ULUGBEK="MIRZO_ULUGBEK";
     String SERGELI="SERGELI";
     String UCHTEPA="UCHTEPA";
     String SHAYXONTOHUR="SHAYXONTOHUR";

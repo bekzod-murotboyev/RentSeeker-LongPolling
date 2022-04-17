@@ -3,12 +3,14 @@ package uz.pdp.rentseekerlongpolling.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.telegram.telegraph.api.objects.Page;
 import uz.pdp.rentseekerlongpolling.payload.telegram.telegraph.CreatedPageDTO;
 
-import static uz.pdp.rentseekerlongpolling.util.security.Telegraph.BASE;
-import static uz.pdp.rentseekerlongpolling.util.security.Telegraph.CREATE_PAGE;
+import javax.ws.rs.GET;
+
+import static uz.pdp.rentseekerlongpolling.util.security.Telegraph.*;
 
 @FeignClient(url = BASE,name = "TelegraphFeign")
 public interface TelegraphFeign {
@@ -28,7 +30,7 @@ public interface TelegraphFeign {
 
 
 
-    @GetMapping(CREATE_PAGE)
+    @GetMapping(EDIT_PAGE)
     Page editPage(@RequestParam("access_token") String accessToken,
                   @RequestParam String path,
                   @RequestParam String title,

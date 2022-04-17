@@ -3,12 +3,14 @@ package uz.pdp.rentseekerlongpolling.payload.home;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import uz.pdp.rentseekerlongpolling.entity.Attachment;
 import uz.pdp.rentseekerlongpolling.util.enums.District;
 import uz.pdp.rentseekerlongpolling.util.enums.HomeStatus;
 import uz.pdp.rentseekerlongpolling.util.enums.HomeType;
 import uz.pdp.rentseekerlongpolling.util.enums.Region;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
@@ -50,8 +52,4 @@ public class HomeEditDTO {
     String mapUrl;
 
     boolean active;
-
-    @NotNull
-    List<Attachment> attachments;
-
 }

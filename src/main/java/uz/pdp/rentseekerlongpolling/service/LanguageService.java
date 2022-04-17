@@ -235,6 +235,7 @@ public class LanguageService implements Constant {
             case FIRST_PAGE_NOTIFICATION:return FIRST_PAGE_NOTIFICATION_UZ;
             case LAST_PAGE_NOTIFICATION:return LAST_PAGE_NOTIFICATION_UZ;
             case HOME_PHOTOS:return HOME_PHOTOS_UZ;
+            case LIMITATION_ERROR:return LIMITATION_ERROR_UZ;
 
 
             case TASHKENT:
@@ -828,6 +829,7 @@ public class LanguageService implements Constant {
 
             case FIRST_PAGE_NOTIFICATION:return FIRST_PAGE_NOTIFICATION_RU;
             case LAST_PAGE_NOTIFICATION:return LAST_PAGE_NOTIFICATION_RU;
+            case LIMITATION_ERROR:return LIMITATION_ERROR_RU;
 
 
             case TASHKENT:
@@ -1418,6 +1420,7 @@ public class LanguageService implements Constant {
             case IT_HAS_ONLY_ONE_PIC:return IT_HAS_ONLY_ONE_PIC;
             case FIRST_PAGE_NOTIFICATION:return FIRST_PAGE_NOTIFICATION;
             case LAST_PAGE_NOTIFICATION:return LAST_PAGE_NOTIFICATION;
+            case LIMITATION_ERROR:return LIMITATION_ERROR;
 
             case TASHKENT:
                 return Region.TASHKENT.getEng();

@@ -6,8 +6,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.telegram.telegraph.api.objects.Node;
-import org.telegram.telegraph.api.objects.NodeElement;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import uz.pdp.rentseekerlongpolling.config.SwaggerConfig;
 import uz.pdp.rentseekerlongpolling.config.WebConfig;

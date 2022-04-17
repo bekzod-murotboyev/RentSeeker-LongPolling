@@ -7,8 +7,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import uz.pdp.rentseekerlongpolling.entity.base.BaseModel;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,27 +17,30 @@ import javax.persistence.Entity;
 @Entity
 public class Attachment extends BaseModel {
 
-    @Column(nullable = false,name = "file_id")
+    @Column(nullable = false, name = "file_id")
     @JsonProperty("file_id")
     private String fileId;
 
-    @Column(nullable = false,name = "file_unique_id")
+    @Column(nullable = false, name = "file_unique_id")
     @JsonProperty("file_unique_id")
     private String fileUniqueId;
 
-    @Column(nullable = false,name = "width")
+    @Column(nullable = false, name = "width")
     @JsonProperty("width")
     private Integer width;
 
-    @Column(nullable = false,name = "height")
+    @Column(nullable = false, name = "height")
     @JsonProperty("height")
     private Integer height;
 
-    @Column(nullable = false,name = "file_size")
+    @Column(nullable = false, name = "file_size")
     @JsonProperty("file_size")
-    private Integer fileSize;
+    private long fileSize;
 
     @Column(name = "file_path")
     @JsonProperty(value = "file_path")
     private String filePath;
+
+    @JsonProperty("content_type")
+    private String contentType;
 }

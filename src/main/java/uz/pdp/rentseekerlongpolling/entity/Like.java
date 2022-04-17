@@ -8,6 +8,8 @@ import uz.pdp.rentseekerlongpolling.entity.base.BaseModel;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +17,7 @@ import javax.persistence.ManyToOne;
 @Getter
 @Setter
 @Entity(name = "likes")
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"home_id","user_id"})})
 public class Like extends BaseModel {
 
     @OnDelete(action = OnDeleteAction.CASCADE)

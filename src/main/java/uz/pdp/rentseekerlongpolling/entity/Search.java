@@ -36,9 +36,11 @@ public class Search extends BaseModel {
     @Enumerated(value = EnumType.STRING)
     HomeType homeType;
 
-    int numberOfRooms = -1;
-    double minPrice = -1;
-    double maxPrice = -1;
+    Integer numberOfRooms;
+
+    Double minPrice;
+
+    Double maxPrice;
 
     public Search(User user) {
         this.user = user;
