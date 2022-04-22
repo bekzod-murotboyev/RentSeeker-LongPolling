@@ -1,6 +1,7 @@
 package uz.pdp.rentseekerlongpolling.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.http.client.HttpResponseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

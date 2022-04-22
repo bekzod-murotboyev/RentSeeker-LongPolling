@@ -42,7 +42,7 @@ public class HomeController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchHomes(@Valid @RequestBody SearchDTO searchDTO) {
+    public ResponseEntity<?> searchHomes(@RequestBody SearchDTO searchDTO) {
         ApiResponse response = homeService.searchHome(searchDTO);
         return ResponseEntity.status(response.isSuccess() ? OK : NOT_FOUND).body(response);
     }

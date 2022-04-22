@@ -1,17 +1,24 @@
 package uz.pdp.rentseekerlongpolling.service;
 
+import org.springframework.core.io.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import uz.pdp.rentseekerlongpolling.entity.Attachment;
-import uz.pdp.rentseekerlongpolling.payload.FileDTO;
 import uz.pdp.rentseekerlongpolling.repository.AttachmentRepository;
 
-import java.io.*;
-import java.nio.file.FileStore;
-import java.util.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 import static uz.pdp.rentseekerlongpolling.util.Url.*;
 
@@ -82,11 +89,7 @@ public class AttachmentService {
         }
     }
 
-    public FileDTO getFile(String fileUniqueId) {
-        FileDTO fileDTO = new FileDTO();
-        Optional<Attachment> uniqueId = attachmentRepository.findByFileUniqueId(fileUniqueId);
-        uniqueId.ifPresent(attachment -> fileDTO.setContentType(attachment.getContentType()));
-        fileDTO.setFile(new File(DIRECTORY + fileUniqueId));
-        return fileDTO;
+    public Resource getFile(String fileUniqueId) {
+        return new FileSystemResource(Paths.get(DIRECTORY, fileUniqueId));
     }
 }

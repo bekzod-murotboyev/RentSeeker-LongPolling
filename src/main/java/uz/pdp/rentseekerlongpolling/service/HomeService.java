@@ -260,7 +260,7 @@ public class HomeService {
         String detailsPath = getDetailsPath(home);
         if (detailsPath == null) return new ApiResponse(false, "Invalid data");
         home.setDetailsPath(detailsPath);
-        home.setActive(true);
+        home.setActive(false);
         return new ApiResponse(true, SUCCESS, homeRepository.save(home));
     }
 

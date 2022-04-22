@@ -11,29 +11,29 @@ create or replace function search_home(
     language plpgsql as
 $$
 declare
-    v_condition varchar:='';
+    v_condition varchar := '';
 begin
 
-    if i_region is not null then
-        v_condition:=v_condition || ' and region='||''''||i_region ||'''';
+    if i_region <> '' then
+        v_condition := v_condition || ' and region=' || '''' || i_region || '''';
     end if;
-    if i_district is not null then
-        v_condition:=v_condition || ' and district='||''''||i_district||'''';
+    if i_district <> '' then
+        v_condition := v_condition || ' and district=' || '''' || i_district || '''';
     end if;
-    if i_status is not null then
-        v_condition:=v_condition || ' and status='||''''||i_status||'''';
+    if i_status <> '' then
+        v_condition := v_condition || ' and status=' || '''' || i_status || '''';
     end if;
-    if i_home_type is not null then
-        v_condition:=v_condition || ' and home_type='||''''||i_home_type||'''';
+    if i_home_type <> '' then
+        v_condition := v_condition || ' and home_type=' || '''' || i_home_type || '''';
     end if;
     if i_number_of_rooms <> -1 then
-        v_condition:=v_condition || ' and number_of_rooms='||i_number_of_rooms;
+        v_condition := v_condition || ' and number_of_rooms=' || i_number_of_rooms;
     end if;
     if i_min_price <> -1 then
-        v_condition:=v_condition || ' and price >= '||i_min_price;
+        v_condition := v_condition || ' and price >= ' || i_min_price;
     end if;
     if i_max_price <> -1 then
-        v_condition:=v_condition || ' and price <= '||i_max_price;
+        v_condition := v_condition || ' and price <= ' || i_max_price;
     end if;
     return query execute 'select * from home where active and not ban' || v_condition || ' order by created_date';
 end;
