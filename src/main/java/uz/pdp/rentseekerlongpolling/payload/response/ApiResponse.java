@@ -1,5 +1,6 @@
 package uz.pdp.rentseekerlongpolling.payload.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class ApiResponse {
     boolean success;
     String message;

@@ -8,12 +8,13 @@ import lombok.experimental.FieldDefaults;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class HomePageableDTO {
-    List<SendPhoto> sendPhotos;
+    Map<String,SendPhoto> sendPhotos;
     String message;
 }

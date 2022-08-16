@@ -132,4 +132,18 @@ $$;
 -- select * from change_home_like('8d1e8ab5-adb0-4445-a631-87ddb5ed9445');
 
 
+create or replace procedure delete_all_homes()
+    language plpgsql as
+$$
+begin
+    delete from home_attachments;
+    delete from attachment;
+    delete from home ;
+    update users set crt_page=0 where crt_page > 0;
+end;
+$$;
+
+-- call delete_all_homes();
+
+
 

@@ -5,12 +5,10 @@ import uz.pdp.rentseekerlongpolling.util.security.BaseData;
 
 public interface Url {
     String BASE_USER="api/user";
-    String BASE_FILE="api/attachment";
-    String DIRECTORY="../";
 
     String USER_ACTIVE="/active";
     String USER_INACTIVE="/inactive";
-    String GLOBAL="http://rent-seeker.us-east-1.elasticbeanstalk.com/";
+    String GLOBAL="http://20.163.99.79:8082/";
 
 
 
@@ -32,5 +30,6 @@ public interface Url {
 
 
 //    String GLOBAL="http://localhost:8080/";
+//    String GLOBAL="https://8ce3-31-40-27-36.ngrok.io/";
 
 }

@@ -7,14 +7,13 @@ public interface Constant {
 
     //CHANGES 14.12.21
     //ADMIN TEXT ABOVE BUTTONS
-    String ADMIN="\uD83E\uDE96 Admin";
-    String ADMIN_RU="\uD83E\uDE96 Админ";
-    String ADMIN_UZ="\uD83E\uDE96 Admin";
+    String ADMIN = "\uD83E\uDE96 Admin";
+    String ADMIN_RU = "\uD83E\uDE96 Админ";
+    String ADMIN_UZ = "\uD83E\uDE96 Admin";
 
-    String USER="\uD83E\uDDE2 User";
-    String USER_RU="\uD83E\uDDE2 Пользователь";
-    String USER_UZ="\uD83E\uDDE2 User";
-
+    String USER = "\uD83E\uDDE2 User";
+    String USER_RU = "\uD83E\uDDE2 Пользователь";
+    String USER_UZ = "\uD83E\uDDE2 User";
 
 
     String ADMIN_USERS_SHOW_MENU_TEXT = "Choose option...";
@@ -72,21 +71,21 @@ public interface Constant {
     String ADMIN_USER_INFO_USERNAME_RU = "\uD83D\uDCAD Имя пользователя: ";
     String ADMIN_USER_INFO_USERNAME_UZ = "\uD83D\uDCAD Username: ";
 
-    String ROLE="\uD83E\uDDBE Role: ";
-    String ROLE_RU="\uD83E\uDDBE Роль: ";
-    String ROLE_UZ="\uD83E\uDDBE Rol: ";
+    String ROLE = "\uD83E\uDDBE Role: ";
+    String ROLE_RU = "\uD83E\uDDBE Роль: ";
+    String ROLE_UZ = "\uD83E\uDDBE Rol: ";
 
-    String SITUATION="\uD83D\uDD05 Situation: ";
-    String SITUATION_RU="\uD83D\uDD05 Ситуация: ";
-    String SITUATION_UZ="\uD83D\uDD05 Holat: ";
+    String SITUATION = "\uD83D\uDD05 Situation: ";
+    String SITUATION_RU = "\uD83D\uDD05 Ситуация: ";
+    String SITUATION_UZ = "\uD83D\uDD05 Holat: ";
 
-    String ACTIVE="Active";
-    String ACTIVE_RU="Активный";
-    String ACTIVE_UZ="Aktiv";
+    String ACTIVE = "Active";
+    String ACTIVE_RU = "Активный";
+    String ACTIVE_UZ = "Aktiv";
 
-    String DE_ACTIVE="Deactive";
-    String DE_ACTIVE_RU="Деактивирован";
-    String DE_ACTIVE_UZ="Aktiv emas";
+    String DE_ACTIVE = "Deactive";
+    String DE_ACTIVE_RU = "Деактивирован";
+    String DE_ACTIVE_UZ = "Aktiv emas";
 
     String ADMIN_USER_INFO_LANGUAGE = "\uD83C\uDFF3 Language: ";
     String ADMIN_USER_INFO_LANGUAGE_RU = "\uD83C\uDFF3 Язык: ";
@@ -101,6 +100,14 @@ public interface Constant {
     String ADMIN_HOMES_IN_DAY = "1️⃣ Day";
     String ADMIN_HOMES_IN_DAY_RU = "1️⃣ День";
     String ADMIN_HOMES_IN_DAY_UZ = "1️⃣ Kun";
+
+    String REMOVE = "\uD83D\uDEA8 Remove";
+    String REMOVE_RU = "\uD83D\uDEA8 Удалять";
+    String REMOVE_UZ = "\uD83D\uDEA8 O'chirish";
+
+    String HOME_REMOVED_TEXT = "✅ All homes successfully deleted";
+    String HOME_REMOVED_TEXT_RU = "✅ Все дома успешно удалены";
+    String HOME_REMOVED_TEXT_UZ = "✅ Barcha uylar muvaqqiyatli o'chirildi";
 
     //SHOW_HOMES_INFO
 
@@ -173,22 +180,20 @@ public interface Constant {
     String BACK_TO_ADMIN_HOMES_INFO = "BACK_TO_ADMIN_HOMES_INFO";
 
 
-
-
     //CHANGES 12.12.21
     //TEXT ABOVE BUTTONS
 
-    String MENU="⏫ Menu";
-    String MENU_RU="⏫ Меню";
-    String MENU_UZ="⏫ Menyu";
+    String MENU = "⏫ Menu";
+    String MENU_RU = "⏫ Меню";
+    String MENU_UZ = "⏫ Menyu";
 
-    String CHECK_USER_BY_ADMIN_TEXT="Enter the code...";
-    String CHECK_USER_BY_ADMIN_TEXT_RU="Bведите код...";
-    String CHECK_USER_BY_ADMIN_TEXT_UZ="Parolni kiriting...";
+    String CHECK_USER_BY_ADMIN_TEXT = "Enter the code...";
+    String CHECK_USER_BY_ADMIN_TEXT_RU = "Bведите код...";
+    String CHECK_USER_BY_ADMIN_TEXT_UZ = "Parolni kiriting...";
 
-    String  CHOOSE_ACTION = "Choose action...";
-    String  CHOOSE_ACTION_RU = "Выберите действие...";
-    String  CHOOSE_ACTION_UZ = "Harakatni tanlang...";
+    String CHOOSE_ACTION = "Choose action...";
+    String CHOOSE_ACTION_RU = "Выберите действие...";
+    String CHOOSE_ACTION_UZ = "Harakatni tanlang...";
 
     String CHOOSE_LANGUAGE_MENU_TEXT = "Choose language that you prefer...";
     String CHOOSE_LANGUAGE_MENU_TEXT_RU = "Выберите язык который вы предпочитаете...";
@@ -198,14 +203,14 @@ public interface Constant {
     String CHOOSE_REGION_MENU_TEXT_RU = "Выберите регион...";
     String CHOOSE_REGION_MENU_TEXT_UZ = "Viloyatni tanlang...";
 
-    String SKIP="\uD83C\uDFCE Skip";
-    String SKIP_RU="\uD83C\uDFCE Пропустить";
-    String SKIP_UZ="\uD83C\uDFCE O'tkazib yuborish";
-    String PREV=" < ";
-    String NEXT=" > ";
-    String NEXT_ACTION="▶️ Next";
-    String NEXT_ACTION_RU="▶️ Следующий";
-    String NEXT_ACTION_UZ="▶️ Keyingisi";
+    String SKIP = "\uD83C\uDFCE Skip";
+    String SKIP_RU = "\uD83C\uDFCE Пропустить";
+    String SKIP_UZ = "\uD83C\uDFCE O'tkazib yuborish";
+    String PREV = " ⬅️ ";
+    String NEXT = " ➡️ ";
+    String NEXT_ACTION = "▶️ Next";
+    String NEXT_ACTION_RU = "▶️ Следующий";
+    String NEXT_ACTION_UZ = "▶️ Keyingisi";
 
 
     String CHOOSE_DISTRICT_MENU_TEXT = "Choose district...";
@@ -246,18 +251,18 @@ public interface Constant {
 
 
     //START
-    String START="/start";
-    String MENU_TEXT_UZ="Xush kelibsiz...";
-    String MENU_TEXT_RU="Добро пожаловать...";
-    String MENU_TEXT="Welcome...";
+    String START = "/start";
+    String MENU_TEXT_UZ = "Xush kelibsiz...";
+    String MENU_TEXT_RU = "Добро пожаловать...";
+    String MENU_TEXT = "Welcome...";
 
-    String EN="\uD83C\uDDFA\uD83C\uDDF8 English";
-    String RU="\uD83C\uDDF7\uD83C\uDDFA Русский";
-    String UZ="\uD83C\uDDFA\uD83C\uDDFF O'zbekcha";
+    String EN = "\uD83C\uDDFA\uD83C\uDDF8 English";
+    String RU = "\uD83C\uDDF7\uD83C\uDDFA Русский";
+    String UZ = "\uD83C\uDDFA\uD83C\uDDFF O'zbekcha";
 
-    String CHANGE_LANGUAGE_TEXT_UZ="Tilni tanlang:";
-    String CHANGE_LANGUAGE_TEXT_RU="Выберите язык:";
-    String CHANGE_LANGUAGE_TEXT="Choose language:";
+    String CHANGE_LANGUAGE_TEXT_UZ = "Tilni tanlang:";
+    String CHANGE_LANGUAGE_TEXT_RU = "Выберите язык:";
+    String CHANGE_LANGUAGE_TEXT = "Choose language:";
 
     String WELCOME_TEXT = "Welcome to RentSeeker bot.\nWe are glad to see you here";
     String WELCOME_TEXT_RU = "Добро пожаловать в бот Ijarachi.\nМы рады видеть вас тут";
@@ -275,26 +280,26 @@ public interface Constant {
     String SETTINGS_RU = "⚙️ Настройки";
     String SETTINGS_UZ = "⚙️ Sozlamalar";
 
-    String STATUS="❕Status: ";
-    String STATUS_RU="❕Статус: ";
-    String STATUS_UZ="❕Status: ";
+    String STATUS = "❕Status: ";
+    String STATUS_RU = "❕Статус: ";
+    String STATUS_UZ = "❕Status: ";
 
-    String RENT="Rent";
-    String RENT_RU="Аренда";
-    String RENT_UZ="Ijaraga";
+    String RENT = "Rent";
+    String RENT_RU = "Аренда";
+    String RENT_UZ = "Ijaraga";
 
 
-    String SELL="Sell";
-    String SELL_RU="Продажа";
-    String SELL_UZ="Sotishga";
+    String SELL = "Sell";
+    String SELL_RU = "Продажа";
+    String SELL_UZ = "Sotishga";
 
     String SEARCH = "\uD83D\uDD0E Search";
     String SEARCH_RU = "\uD83D\uDD0E Поиск";
     String SEARCH_UZ = "\uD83D\uDD0E Qidirish";
 
-    String BACK="⬅️ Back";
-    String BACK_RU="⬅️ Назад";
-    String BACK_UZ="⬅️ Orqaga";
+    String BACK = "⬅️ Back";
+    String BACK_RU = "⬅️ Назад";
+    String BACK_UZ = "⬅️ Orqaga";
 
     String FOR_RENTING = "\uD83D\uDD11 For renting";
     String FOR_RENTING_RU = "\uD83D\uDD11 Для сдачи аренды";
@@ -318,22 +323,22 @@ public interface Constant {
     String WRITE_ADDRESS_RU = "\uD83C\uDFE0 Ввести адресс";
     String WRITE_ADDRESS_UZ = "\uD83C\uDFE0 Adresni yozing";
 
-    String WRITE_SEND_LOCATION_TEXT="✉️ Send home location or enter yourself";
-    String WRITE_SEND_LOCATION_TEXT_RU="✉️ Отправьте свое местоположение или введите свое местоположение";
-    String WRITE_SEND_LOCATION_TEXT_UZ="✉️ Uy manzilini yuboring yoki o'zingiz kiriting";
+    String WRITE_SEND_LOCATION_TEXT = "✉️ Send home location or enter yourself";
+    String WRITE_SEND_LOCATION_TEXT_RU = "✉️ Отправьте свое местоположение или введите свое местоположение";
+    String WRITE_SEND_LOCATION_TEXT_UZ = "✉️ Uy manzilini yuboring yoki o'zingiz kiriting";
 
 
-    String SEND_LOCATION_TEXT="\uD83D\uDCCC Send location or send your current location";
-    String SEND_LOCATION_TEXT_RU="\uD83D\uDCCC Отправить местоположение или отправить свое текущее местоположение";
-    String SEND_LOCATION_TEXT_UZ="\uD83D\uDCCC Lokatsiya jo'nating yoki hozirgi lokatsiyangizni yuboring";
+    String SEND_LOCATION_TEXT = "\uD83D\uDCCC Send location or send your current location";
+    String SEND_LOCATION_TEXT_RU = "\uD83D\uDCCC Отправить местоположение или отправить свое текущее местоположение";
+    String SEND_LOCATION_TEXT_UZ = "\uD83D\uDCCC Lokatsiya jo'nating yoki hozirgi lokatsiyangizni yuboring";
 
     String SEND_LOCATION = "⛳️ Send location";
     String SEND_LOCATION_RU = "⛳️ Отправить локацию";
     String SEND_LOCATION_UZ = "⛳ ️Lokatsiyani jonatish";
 
-    String LOCATION_NOT_FOUND="\uD83C\uDFAF Location not found!";
-    String LOCATION_NOT_FOUND_RU="\uD83C\uDFAF Местоположение не найдено!";
-    String LOCATION_NOT_FOUND_UZ="\uD83C\uDFAF Lokatsiya topilmadi!";
+    String LOCATION_NOT_FOUND = "\uD83C\uDFAF Location not found!";
+    String LOCATION_NOT_FOUND_RU = "\uD83C\uDFAF Местоположение не найдено!";
+    String LOCATION_NOT_FOUND_UZ = "\uD83C\uDFAF Lokatsiya topilmadi!";
 
     String HOUSE = "House";
     String HOUSE_RU = "Участок";
@@ -367,9 +372,9 @@ public interface Constant {
     String WRITE_DESCRIPTION_RU = "\uD83D\uDCDD Написать описание";
     String WRITE_DESCRIPTION_UZ = "\uD83D\uDCDD Tavsif yozish";
 
-    String SUCCESSFULLY_SAVED="✅ Your home has been successfully added";
-    String SUCCESSFULLY_SAVED_RU="✅ Ваш дом был успешно добавлен";
-    String SUCCESSFULLY_SAVED_UZ="✅ Uyingiz muvaffaqiyatli qo'shildi";
+    String SUCCESSFULLY_SAVED = "✅ Your home has been successfully added";
+    String SUCCESSFULLY_SAVED_RU = "✅ Ваш дом был успешно добавлен";
+    String SUCCESSFULLY_SAVED_UZ = "✅ Uyingiz muvaffaqiyatli qo'shildi";
 
     //SHOW_HOUSES
     //for renting and for selling are above
@@ -378,13 +383,13 @@ public interface Constant {
     String MY_NOTES_RU = "\uD83D\uDD16 Мои заметки";
     String MY_NOTES_UZ = "\uD83D\uDD16 Mening eslatmalarim";
 
-    String SHOW_ALL="\uD83C\uDFD8 Show all";
-    String SHOW_ALL_RU="\uD83C\uDFD8 Показать все";
-    String SHOW_ALL_UZ="\uD83C\uDFD8 Hamma uylar";
+    String SHOW_ALL = "\uD83C\uDFD8 Show all";
+    String SHOW_ALL_RU = "\uD83C\uDFD8 Показать все";
+    String SHOW_ALL_UZ = "\uD83C\uDFD8 Hamma uylar";
 
-    String HOMES_NOT_FOUND="\uD83C\uDD99 There are no houses yet!";
-    String HOMES_NOT_FOUND_RU="\uD83C\uDD99 Еще нет домов";
-    String HOMES_NOT_FOUND_UZ="\uD83C\uDD99 Hozircha uylar mavjud emas";
+    String HOMES_NOT_FOUND = "\uD83C\uDD99 There are no houses yet!";
+    String HOMES_NOT_FOUND_RU = "\uD83C\uDD99 Еще нет домов";
+    String HOMES_NOT_FOUND_UZ = "\uD83C\uDD99 Hozircha uylar mavjud emas";
 
     //HOUSE_VIEW
     String HOUSE_TYPE = "\uD83C\uDFE1 Type of accommodation: ";
@@ -399,9 +404,9 @@ public interface Constant {
     String DESCRIPTION_RU = "\uD83D\uDCDD Описание: ";
     String DESCRIPTION_UZ = "\uD83D\uDCDD Tavsifi: ";
 
-    String DATE="\uD83D\uDCC5 Date: ";
-    String DATE_RU="\uD83D\uDCC5 Дата: ";
-    String DATE_UZ="\uD83D\uDCC5 Sana: ";
+    String DATE = "\uD83D\uDCC5 Date: ";
+    String DATE_RU = "\uD83D\uDCC5 Дата: ";
+    String DATE_UZ = "\uD83D\uDCC5 Sana: ";
 
     String NUMBER_OF_LIKES = "♥️ Likes: ";
     String NUMBER_OF_LIKES_RU = "♥️ Лайки: ";
@@ -428,9 +433,9 @@ public interface Constant {
     String MY_FAVOURITES_RU = "♥️ Мои избранные";
     String MY_FAVOURITES_UZ = "♥ Sevimlilarim";
 
-    String HOME_PHOTOS="\uD83C\uDF03 Images";
-    String HOME_PHOTOS_RU="\uD83C\uDF03 Картинки";
-    String HOME_PHOTOS_UZ="\uD83C\uDF03 Rasmlar";
+    String HOME_PHOTOS = "\uD83C\uDF03 Images";
+    String HOME_PHOTOS_RU = "\uD83C\uDF03 Картинки";
+    String HOME_PHOTOS_UZ = "\uD83C\uDF03 Rasmlar";
 
     //SEARCH
 
@@ -460,19 +465,19 @@ public interface Constant {
 
     //SETTINGS
 
-    String CHOOSE_ONE="Choose one...";
-    String CHOOSE_ONE_UZ="Tanlang...";
-    String CHOOSE_ONE_RU="Выбери один...";
+    String CHOOSE_ONE = "Choose one...";
+    String CHOOSE_ONE_UZ = "Tanlang...";
+    String CHOOSE_ONE_RU = "Выбери один...";
 
-    String CHANGE_LANGUAGE="Change language \uD83C\uDDFA\uD83C\uDDF8";
-    String CHANGE_LANGUAGE_UZ="Tilni o'zgartirish \uD83C\uDDFA\uD83C\uDDFF";
-    String CHANGE_LANGUAGE_RU="Изменить язык \uD83C\uDDF7\uD83C\uDDFA";
+    String CHANGE_LANGUAGE = "Change language \uD83C\uDDFA\uD83C\uDDF8";
+    String CHANGE_LANGUAGE_UZ = "Tilni o'zgartirish \uD83C\uDDFA\uD83C\uDDFF";
+    String CHANGE_LANGUAGE_RU = "Изменить язык \uD83C\uDDF7\uD83C\uDDFA";
 
     //REGISTRATION
 
-    String REGISTRATION="® Registration";
-    String REGISTRATION_UZ="® Registratsiya";
-    String REGISTRATION_RU="® Регистрация";
+    String REGISTRATION = "® Registration";
+    String REGISTRATION_UZ = "® Registratsiya";
+    String REGISTRATION_RU = "® Регистрация";
 
     String ENTER_PHONE_NUMBER_TEXT = ",Enter number in type of +998 ** *** **** or write it.";
     String ENTER_PHONE_NUMBER_TEXT_RU = ",Введите номер в формате +998 ** *** **** или напишите.";
@@ -482,43 +487,43 @@ public interface Constant {
     String SEND_PHONE_NUMBER_RU = "\uD83D\uDCDE Отправить номер";
     String SEND_PHONE_NUMBER_UZ = "\uD83D\uDCDE Raqamni jonatish";
 
-    String MY_PHONE_NUMBER="\uD83D\uDCDE My number";
-    String MY_PHONE_NUMBER_RU="\uD83D\uDCDE Мой номер";
-    String MY_PHONE_NUMBER_UZ="\uD83D\uDCDE Mening raqamim";
+    String MY_PHONE_NUMBER = "\uD83D\uDCDE My number";
+    String MY_PHONE_NUMBER_RU = "\uD83D\uDCDE Мой номер";
+    String MY_PHONE_NUMBER_UZ = "\uD83D\uDCDE Mening raqamim";
 
-    String REGISTER_WARNING_TEXT="First of all you need to register in the settings section!";
-    String REGISTER_WARNING_TEXT_RU="Прежде всего вам необходимо зарегистрироваться в разделе настроек!";
-    String REGISTER_WARNING_TEXT_UZ="Birinchi navbatda  sozlamalar bo'limidan registratsiyadan o'tishingiz kerak!";
+    String REGISTER_WARNING_TEXT = "First of all you need to register in the settings section!";
+    String REGISTER_WARNING_TEXT_RU = "Прежде всего вам необходимо зарегистрироваться в разделе настроек!";
+    String REGISTER_WARNING_TEXT_UZ = "Birinchi navbatda  sozlamalar bo'limidan registratsiyadan o'tishingiz kerak!";
 
-    String IT_HAS_ONLY_ONE_PIC="This home has only one picture!";
-    String IT_HAS_ONLY_ONE_PIC_RU="У этого дома только одна фотография!";
-    String IT_HAS_ONLY_ONE_PIC_UZ="Bu uyda faqat bitta rasm bor!";
+    String IT_HAS_ONLY_ONE_PIC = "This home has only one picture!";
+    String IT_HAS_ONLY_ONE_PIC_RU = "У этого дома только одна фотография!";
+    String IT_HAS_ONLY_ONE_PIC_UZ = "Bu uyda faqat bitta rasm bor!";
 
-    String FIRST_PAGE_NOTIFICATION="You are on the first page!";
-    String FIRST_PAGE_NOTIFICATION_RU="Вы находитесь на первой странице!";
-    String FIRST_PAGE_NOTIFICATION_UZ="Siz birinchi sahifadasiz!";
+    String FIRST_PAGE_NOTIFICATION = "You are on the first page!";
+    String FIRST_PAGE_NOTIFICATION_RU = "Вы находитесь на первой странице!";
+    String FIRST_PAGE_NOTIFICATION_UZ = "Siz birinchi sahifadasiz!";
 
-    String LAST_PAGE_NOTIFICATION="You are on the last page!";
-    String LAST_PAGE_NOTIFICATION_RU="Вы находитесь на последней странице!";
-    String LAST_PAGE_NOTIFICATION_UZ="Siz oxirgi sahifadasiz!";
+    String LAST_PAGE_NOTIFICATION = "You are on the last page!";
+    String LAST_PAGE_NOTIFICATION_RU = "Вы находитесь на последней странице!";
+    String LAST_PAGE_NOTIFICATION_UZ = "Siz oxirgi sahifadasiz!";
 
-    String BAN_MENU_TEXT="You have been blocked by the admin for some reason!";
-    String BAN_MENU_TEXT_RU="Вы были заблокированы администратором по какой-то причине!";
-    String BAN_MENU_TEXT_UZ="Ba'zi sabablarga ko'ra admin tomonidan taqiqlangansiz!";
+    String BAN_MENU_TEXT = "You have been blocked by the admin for some reason!";
+    String BAN_MENU_TEXT_RU = "Вы были заблокированы администратором по какой-то причине!";
+    String BAN_MENU_TEXT_UZ = "Ba'zi sabablarga ko'ra admin tomonidan taqiqlangansiz!";
 
-    String LIMITATION_ERROR="❗️Conflict. Please, reduce your entered data!";
-    String LIMITATION_ERROR_RU="❗️️Ошибка. Пожалуйста, сократите количество вводимой информации!";
-    String LIMITATION_ERROR_UZ="❗Xatolik. Iltioms, kiritilgan ma'lumotlarni qisqarting!";
+    String LIMITATION_ERROR = "❗️Conflict. Please, reduce your entered data!";
+    String LIMITATION_ERROR_RU = "❗️️Ошибка. Пожалуйста, сократите количество вводимой информации!";
+    String LIMITATION_ERROR_UZ = "❗Xatolik. Iltioms, kiritilgan ma'lumotlarni qisqarting!";
 
-    String ERROR="❗️ ❗️ ❗️";
-    String PHONE="PHONE";
-    String PHOTOS="PHOTOS";
-    String LIKE="LIKE";
+    String ERROR = "❗️ ❗️ ❗️";
+    String PHONE = "PHONE";
+    String PHOTOS = "PHOTOS";
+    String LIKE = "LIKE";
 
 
     //BACK_STATES
 
-    String BACK_TO_ADMIN_MENU= "BACK_TO_ADMIN_MENU";
+    String BACK_TO_ADMIN_MENU = "BACK_TO_ADMIN_MENU";
 
     String BACK_TO_MAIN_MENU_SEND = "BACK_TO_MAIN_MENU_SEND";
 
@@ -546,8 +551,8 @@ public interface Constant {
 
     String BACK_TO_GIVE_HOME_PRICE = "BACK_TO_GIVE_HOME_PRICE";
 
-    String BACK_TO_SHOW_MENU_SEND="BACK_TO_SHOW_MENU_SEND";
-    String BACK_TO_SHOW_MENU_EDIT="BACK_TO_SHOW_MENU_EDIT";
+    String BACK_TO_SHOW_MENU_SEND = "BACK_TO_SHOW_MENU_SEND";
+    String BACK_TO_SHOW_MENU_EDIT = "BACK_TO_SHOW_MENU_EDIT";
 
     String BACK_TO_CHOOSE_HOME_STATUS = "BACK_TO_CHOOSE_HOME_STATUS";
 
@@ -594,191 +599,191 @@ public interface Constant {
 
 
     // REGIONS
-    String TASHKENT="TASHKENT";
-    String TASHKENT_REGION="TASHKENT_REGION";
-    String ANDIJAN="ANDIJAN";
-    String BUKHARA="BUKHARA";
-    String DZHIZAK="DZHIZAK";
-    String KASHKADARYA="KASHKADARYA";
-    String NAVOI="NAVOI";
-    String NAMANGAN="NAMANGAN";
-    String SAMARKAND="SAMARKAND";
-    String SURKHANDARYA="SURKHANDARYA";
-    String SYRDARYA="SYRDARYA";
-    String FERGHANA="FERGHANA";
-    String XORAZM="XORAZM";
-    String REPUBLIC_OF_KARAKALPAKSTAN="REPUBLIC_OF_KARAKALPAKSTAN";
+    String TASHKENT = "TASHKENT";
+    String TASHKENT_REGION = "TASHKENT_REGION";
+    String ANDIJAN = "ANDIJAN";
+    String BUKHARA = "BUKHARA";
+    String DZHIZAK = "DZHIZAK";
+    String KASHKADARYA = "KASHKADARYA";
+    String NAVOI = "NAVOI";
+    String NAMANGAN = "NAMANGAN";
+    String SAMARKAND = "SAMARKAND";
+    String SURKHANDARYA = "SURKHANDARYA";
+    String SYRDARYA = "SYRDARYA";
+    String FERGHANA = "FERGHANA";
+    String XORAZM = "XORAZM";
+    String REPUBLIC_OF_KARAKALPAKSTAN = "REPUBLIC_OF_KARAKALPAKSTAN";
 
     // DISTRICTS
-    String OLMAZOR="OLMAZOR";
-    String BEKTEMIR="BEKTEMIR";
-    String MIROBOD="MIROBOD";
-    String MIRZO_ULUGBEK="MIRZO_ULUGBEK";
-    String SERGELI="SERGELI";
-    String UCHTEPA="UCHTEPA";
-    String SHAYXONTOHUR="SHAYXONTOHUR";
-    String YASHNOBOD="YASHNOBOD";
-    String CHILONZOR="CHILONZOR";
-    String YUNUSOBOD="YUNUSOBOD";
-    String YAKKASAROY="YAKKASAROY";
-    String BEKOBOD="BEKOBOD";
-    String BOSTONLIQ="BOSTONLIQ";
-    String BOKA="BOKA";
-    String CHINOZ="CHINOZ";
-    String QIBRAY="QIBRAY";
-    String OHANGARON="OHANGARON";
-    String OQQORGON="OQQORGON";
-    String PARKENT="PARKENT";
-    String PISKENT="PISKENT";
-    String QUYI_CHIRCHIQ="QUYI_CHIRCHIQ";
-    String ZANGIOTA="ZANGIOTA";
-    String ORTA_CHIRCHIQ="ORTA_CHIRCHIQ";
-    String YANGIYOL="YANGIYOL";
-    String YUQORI_CHIRCHIQ="YUQORI_CHIRCHIQ";
-    String SHAHRIXON="SHAHRIXON";
-    String ASAKA="ASAKA";
-    String QORGONTEPA="QORGONTEPA";
-    String ANDIJON="ANDIJON";
-    String BALIQCHI="BALIQCHI";
-    String OLTINKOL="OLTINKOL";
-    String JALAQUDUQ="JALAQUDUQ";
-    String IZBOSKAN="IZBOSKAN";
-    String PAXTAOBOD="PAXTAOBOD";
-    String MARHAMAT="MARHAMAT";
-    String XOJAOBOD="XOJAOBOD";
-    String BULOQBOSHI="BULOQBOSHI";
-    String BOSTON="BOSTON";
-    String ULUGNOR="ULUGNOR";
-    String XONOBOD="XONOBOD";
-    String BUXORO="BUXORO";
-    String GIJDUVON="GIJDUVON";
-    String JONDOR="JONDOR";
-    String KOGON="KOGON";
-    String OLOT="OLOT";
-    String PESHKU="PESHKU";
-    String QORAKOL="QORAKOL";
-    String QOROVULBOZOR="QOROVULBOZOR";
-    String ROMITAN="ROMITAN";
-    String SHOFIRKON="SHOFIRKON";
-    String VOBKENT="VOBKENT";
-    String ARNASOY="ARNASOY";
-    String BAXMAL="BAXMAL";
-    String DOSTLIK="DOSTLIK";
-    String FORISH="FORISH";
-    String GALLAOROL="GALLAOROL";
-    String JIZZAX="JIZZAX";
-    String MIRZACHOL="MIRZACHOL";
-    String PAXTAKOR="PAXTAKOR";
-    String YANGIOBOD="YANGIOBOD";
-    String ZAFAROBOD="ZAFAROBOD";
-    String ZARBAND="ZARBAND";
-    String ZOMIN="ZOMIN";
-    String CHIROQCHI="CHIROQCHI";
-    String DEHQONOBOD="DEHQONOBOD";
-    String GUZOR="GUZOR";
-    String KASBI="KASBI";
-    String KITOB="KITOB";
-    String KOSON="KOSON";
-    String MIRISHKOR="MIRISHKOR";
-    String MUBORAK="MUBORAK";
-    String NISHON="NISHON";
-    String QAMASHI="QAMASHI";
-    String QARSHI="QARSHI";
-    String SHAHRISABZ="SHAHRISABZ";
-    String YAKKABOG="YAKKABOG";
-    String KARMANA="KARMANA";
-    String KONIMEX="KONIMEX";
-    String NAVBAHOR="NAVBAHOR";
-    String NUROTA="NUROTA";
-    String QIZILTEPA="QIZILTEPA";
-    String TOMDI="TOMDI";
-    String UCHQUDUQ="UCHQUDUQ";
-    String XATIRCHI="XATIRCHI";
-    String CHORTOQ="CHORTOQ";
-    String CHUST="CHUST";
-    String KOSONSOY="KOSONSOY";
-    String MINGBULOQ="MINGBULOQ";
-    String NAMANGON="NAMANGON";
-    String NORIN="NORIN";
-    String POP="POP";
-    String TORAQORGON="TORAQORGON";
-    String UCHQORGON="UCHQORGON";
-    String UYCHI="UYCHI";
-    String YANGIQORGON="YANGIQORGON";
-    String BULUNGUR="BULUNGUR";
-    String ISHTIXON="ISHTIXON";
-    String JOMBOY="JOMBOY";
-    String KATTAQORGON="KATTAQORGON";
-    String NARPAY="NARPAY";
-    String NUROBOD="NUROBOD";
-    String OQDARYO="OQDARYO";
-    String PAST_DARGOM="PAST_DARGOM";
-    String PAXTACHI="PAXTACHI";
-    String POYARIQ="POYARIQ";
-    String QOSHRABOT="QOSHRABOT";
-    String SAMARQAND="SAMARQAND";
-    String TOYLOQ="TOYLOQ";
-    String URGUT="URGUT";
-    String ANGOR="ANGOR";
-    String BANDIXON="BANDIXON";
-    String BOYSUN="BOYSUN";
-    String DENOV="DENOV";
-    String JARQORGON="JARQORGON";
-    String MUZROBOR="MUZROBOR";
-    String OLTINSOY="OLTINSOY";
-    String QIZIRIQ="QIZIRIQ";
-    String QUMQORGON="QUMQORGON";
-    String SARIOSIYO="SARIOSIYO";
-    String SHEROBOD="SHEROBOD";
-    String SHORCHI="SHORCHI";
-    String TERMIZ="TERMIZ";
-    String UZUN="UZUN";
-    String BOYOVUT="BOYOVUT";
-    String GULISTON="GULISTON";
-    String OQOLTIN="OQOLTIN";
-    String SARDOBA="SARDOBA";
-    String SAYXUNOBOD="SAYXUNOBOD";
-    String SIRDARYO="SIRDARYO";
-    String XOVOS="XOVOS";
-    String MIRZAOBOD="MIRZAOBOD";
-    String BESHARIQ="BESHARIQ";
-    String BOGDOD="BOGDOD";
-    String BUVAYDA="BUVAYDA";
-    String DANGARA="DANGARA";
-    String FARGONA="FARGONA";
-    String FURQAT="FURQAT";
-    String OZBEKISTON="OZBEKISTON";
-    String OLTIARIQ="OLTIARIQ";
-    String QOSHTEPA="QOSHTEPA";
-    String QUVA="QUVA";
-    String RISHTON="RISHTON";
-    String SOX="SOX";
-    String TOSHLOQ="TOSHLOQ";
-    String UCHKOPRIK="UCHKOPRIK";
-    String YOZYOVON="YOZYOVON";
-    String BOGOT="BOGOT";
-    String GURLAN="GURLAN";
-    String QOSHKOPIR="QOSHKOPIR";
-    String SHOVOT="SHOVOT";
-    String URGANCH="URGANCH";
-    String XAZORASP="XAZORASP";
-    String XIVA="XIVA";
-    String XONQA="XONQA";
-    String YANGIARIQ="YANGIARIQ";
-    String YANGIBOZOR="YANGIBOZOR";
-    String AMUDARYO="AMUDARYO";
-    String BERUNIY="BERUNIY";
-    String CHIMBOY="CHIMBOY";
-    String ELLIKQALA="ELLIKQALA";
-    String KEGEYLI="KEGEYLI";
-    String MOYNOQ="MOYNOQ";
-    String NUKUS="NUKUS";
-    String QONLIKOL="QONLIKOL";
-    String QORAUZAQ="QORAUZAQ";
-    String QUNGIROT="QUNGIROT";
-    String SHUMANAY="SHUMANAY";
-    String TAXTAKOPIR="TAXTAKOPIR";
-    String TORTKOL="TORTKOL";
-    String XOJAYLI="XOJAYLI";
+    String OLMAZOR = "OLMAZOR";
+    String BEKTEMIR = "BEKTEMIR";
+    String MIROBOD = "MIROBOD";
+    String MIRZO_ULUGBEK = "MIRZO_ULUGBEK";
+    String SERGELI = "SERGELI";
+    String UCHTEPA = "UCHTEPA";
+    String SHAYXONTOHUR = "SHAYXONTOHUR";
+    String YASHNOBOD = "YASHNOBOD";
+    String CHILONZOR = "CHILONZOR";
+    String YUNUSOBOD = "YUNUSOBOD";
+    String YAKKASAROY = "YAKKASAROY";
+    String BEKOBOD = "BEKOBOD";
+    String BOSTONLIQ = "BOSTONLIQ";
+    String BOKA = "BOKA";
+    String CHINOZ = "CHINOZ";
+    String QIBRAY = "QIBRAY";
+    String OHANGARON = "OHANGARON";
+    String OQQORGON = "OQQORGON";
+    String PARKENT = "PARKENT";
+    String PISKENT = "PISKENT";
+    String QUYI_CHIRCHIQ = "QUYI_CHIRCHIQ";
+    String ZANGIOTA = "ZANGIOTA";
+    String ORTA_CHIRCHIQ = "ORTA_CHIRCHIQ";
+    String YANGIYOL = "YANGIYOL";
+    String YUQORI_CHIRCHIQ = "YUQORI_CHIRCHIQ";
+    String SHAHRIXON = "SHAHRIXON";
+    String ASAKA = "ASAKA";
+    String QORGONTEPA = "QORGONTEPA";
+    String ANDIJON = "ANDIJON";
+    String BALIQCHI = "BALIQCHI";
+    String OLTINKOL = "OLTINKOL";
+    String JALAQUDUQ = "JALAQUDUQ";
+    String IZBOSKAN = "IZBOSKAN";
+    String PAXTAOBOD = "PAXTAOBOD";
+    String MARHAMAT = "MARHAMAT";
+    String XOJAOBOD = "XOJAOBOD";
+    String BULOQBOSHI = "BULOQBOSHI";
+    String BOSTON = "BOSTON";
+    String ULUGNOR = "ULUGNOR";
+    String XONOBOD = "XONOBOD";
+    String BUXORO = "BUXORO";
+    String GIJDUVON = "GIJDUVON";
+    String JONDOR = "JONDOR";
+    String KOGON = "KOGON";
+    String OLOT = "OLOT";
+    String PESHKU = "PESHKU";
+    String QORAKOL = "QORAKOL";
+    String QOROVULBOZOR = "QOROVULBOZOR";
+    String ROMITAN = "ROMITAN";
+    String SHOFIRKON = "SHOFIRKON";
+    String VOBKENT = "VOBKENT";
+    String ARNASOY = "ARNASOY";
+    String BAXMAL = "BAXMAL";
+    String DOSTLIK = "DOSTLIK";
+    String FORISH = "FORISH";
+    String GALLAOROL = "GALLAOROL";
+    String JIZZAX = "JIZZAX";
+    String MIRZACHOL = "MIRZACHOL";
+    String PAXTAKOR = "PAXTAKOR";
+    String YANGIOBOD = "YANGIOBOD";
+    String ZAFAROBOD = "ZAFAROBOD";
+    String ZARBAND = "ZARBAND";
+    String ZOMIN = "ZOMIN";
+    String CHIROQCHI = "CHIROQCHI";
+    String DEHQONOBOD = "DEHQONOBOD";
+    String GUZOR = "GUZOR";
+    String KASBI = "KASBI";
+    String KITOB = "KITOB";
+    String KOSON = "KOSON";
+    String MIRISHKOR = "MIRISHKOR";
+    String MUBORAK = "MUBORAK";
+    String NISHON = "NISHON";
+    String QAMASHI = "QAMASHI";
+    String QARSHI = "QARSHI";
+    String SHAHRISABZ = "SHAHRISABZ";
+    String YAKKABOG = "YAKKABOG";
+    String KARMANA = "KARMANA";
+    String KONIMEX = "KONIMEX";
+    String NAVBAHOR = "NAVBAHOR";
+    String NUROTA = "NUROTA";
+    String QIZILTEPA = "QIZILTEPA";
+    String TOMDI = "TOMDI";
+    String UCHQUDUQ = "UCHQUDUQ";
+    String XATIRCHI = "XATIRCHI";
+    String CHORTOQ = "CHORTOQ";
+    String CHUST = "CHUST";
+    String KOSONSOY = "KOSONSOY";
+    String MINGBULOQ = "MINGBULOQ";
+    String NAMANGON = "NAMANGON";
+    String NORIN = "NORIN";
+    String POP = "POP";
+    String TORAQORGON = "TORAQORGON";
+    String UCHQORGON = "UCHQORGON";
+    String UYCHI = "UYCHI";
+    String YANGIQORGON = "YANGIQORGON";
+    String BULUNGUR = "BULUNGUR";
+    String ISHTIXON = "ISHTIXON";
+    String JOMBOY = "JOMBOY";
+    String KATTAQORGON = "KATTAQORGON";
+    String NARPAY = "NARPAY";
+    String NUROBOD = "NUROBOD";
+    String OQDARYO = "OQDARYO";
+    String PAST_DARGOM = "PAST_DARGOM";
+    String PAXTACHI = "PAXTACHI";
+    String POYARIQ = "POYARIQ";
+    String QOSHRABOT = "QOSHRABOT";
+    String SAMARQAND = "SAMARQAND";
+    String TOYLOQ = "TOYLOQ";
+    String URGUT = "URGUT";
+    String ANGOR = "ANGOR";
+    String BANDIXON = "BANDIXON";
+    String BOYSUN = "BOYSUN";
+    String DENOV = "DENOV";
+    String JARQORGON = "JARQORGON";
+    String MUZROBOR = "MUZROBOR";
+    String OLTINSOY = "OLTINSOY";
+    String QIZIRIQ = "QIZIRIQ";
+    String QUMQORGON = "QUMQORGON";
+    String SARIOSIYO = "SARIOSIYO";
+    String SHEROBOD = "SHEROBOD";
+    String SHORCHI = "SHORCHI";
+    String TERMIZ = "TERMIZ";
+    String UZUN = "UZUN";
+    String BOYOVUT = "BOYOVUT";
+    String GULISTON = "GULISTON";
+    String OQOLTIN = "OQOLTIN";
+    String SARDOBA = "SARDOBA";
+    String SAYXUNOBOD = "SAYXUNOBOD";
+    String SIRDARYO = "SIRDARYO";
+    String XOVOS = "XOVOS";
+    String MIRZAOBOD = "MIRZAOBOD";
+    String BESHARIQ = "BESHARIQ";
+    String BOGDOD = "BOGDOD";
+    String BUVAYDA = "BUVAYDA";
+    String DANGARA = "DANGARA";
+    String FARGONA = "FARGONA";
+    String FURQAT = "FURQAT";
+    String OZBEKISTON = "OZBEKISTON";
+    String OLTIARIQ = "OLTIARIQ";
+    String QOSHTEPA = "QOSHTEPA";
+    String QUVA = "QUVA";
+    String RISHTON = "RISHTON";
+    String SOX = "SOX";
+    String TOSHLOQ = "TOSHLOQ";
+    String UCHKOPRIK = "UCHKOPRIK";
+    String YOZYOVON = "YOZYOVON";
+    String BOGOT = "BOGOT";
+    String GURLAN = "GURLAN";
+    String QOSHKOPIR = "QOSHKOPIR";
+    String SHOVOT = "SHOVOT";
+    String URGANCH = "URGANCH";
+    String XAZORASP = "XAZORASP";
+    String XIVA = "XIVA";
+    String XONQA = "XONQA";
+    String YANGIARIQ = "YANGIARIQ";
+    String YANGIBOZOR = "YANGIBOZOR";
+    String AMUDARYO = "AMUDARYO";
+    String BERUNIY = "BERUNIY";
+    String CHIMBOY = "CHIMBOY";
+    String ELLIKQALA = "ELLIKQALA";
+    String KEGEYLI = "KEGEYLI";
+    String MOYNOQ = "MOYNOQ";
+    String NUKUS = "NUKUS";
+    String QONLIKOL = "QONLIKOL";
+    String QORAUZAQ = "QORAUZAQ";
+    String QUNGIROT = "QUNGIROT";
+    String SHUMANAY = "SHUMANAY";
+    String TAXTAKOPIR = "TAXTAKOPIR";
+    String TORTKOL = "TORTKOL";
+    String XOJAYLI = "XOJAYLI";
 
 }

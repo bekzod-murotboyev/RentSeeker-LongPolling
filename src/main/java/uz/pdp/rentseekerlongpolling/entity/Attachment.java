@@ -40,7 +40,4 @@ public class Attachment extends BaseModel {
     @Column(name = "file_path")
     @JsonProperty(value = "file_path")
     private String filePath;
-
-    @JsonProperty("content_type")
-    private String contentType;
 }

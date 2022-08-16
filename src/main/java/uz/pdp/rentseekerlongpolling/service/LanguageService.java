@@ -236,7 +236,8 @@ public class LanguageService implements Constant {
             case LAST_PAGE_NOTIFICATION:return LAST_PAGE_NOTIFICATION_UZ;
             case HOME_PHOTOS:return HOME_PHOTOS_UZ;
             case LIMITATION_ERROR:return LIMITATION_ERROR_UZ;
-
+            case REMOVE:return REMOVE_UZ;
+            case HOME_REMOVED_TEXT:return HOME_REMOVED_TEXT_UZ;
 
             case TASHKENT:
                 return Region.TASHKENT.getUz();
@@ -830,7 +831,8 @@ public class LanguageService implements Constant {
             case FIRST_PAGE_NOTIFICATION:return FIRST_PAGE_NOTIFICATION_RU;
             case LAST_PAGE_NOTIFICATION:return LAST_PAGE_NOTIFICATION_RU;
             case LIMITATION_ERROR:return LIMITATION_ERROR_RU;
-
+            case REMOVE:return REMOVE_RU;
+            case HOME_REMOVED_TEXT:return HOME_REMOVED_TEXT_RU;
 
             case TASHKENT:
                 return Region.TASHKENT.getRu();
@@ -1421,6 +1423,8 @@ public class LanguageService implements Constant {
             case FIRST_PAGE_NOTIFICATION:return FIRST_PAGE_NOTIFICATION;
             case LAST_PAGE_NOTIFICATION:return LAST_PAGE_NOTIFICATION;
             case LIMITATION_ERROR:return LIMITATION_ERROR;
+            case REMOVE:return REMOVE;
+            case HOME_REMOVED_TEXT:return HOME_REMOVED_TEXT;
 
             case TASHKENT:
                 return Region.TASHKENT.getEng();

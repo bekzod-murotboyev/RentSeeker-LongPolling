@@ -1,0 +1,17 @@
+api:
+  info:
+    title: RentSeeker
+    description: App about renting houses
+    version: 1.0
+    termOfService: http://murotboyev-bekzodbek.us-east-1.elasticbeanstalk.com
+    contact-name: Bekzodbek Murotboyev
+    contact-email: http://murotboyev-bekzodbek.us-east-1.elasticbeanstalk.com
+    contact-url: http://murotboyev-bekzodbek.us-east-1.elasticbeanstalk.com
+    license-name: Apache 2.0
+    license-url: https://www.apache.org/licenses/LICENSE-2.0.html
+
+springdoc:
+  swagger-ui:
+    path: swagger-ui
+  api-docs:
+    path: /api-docs

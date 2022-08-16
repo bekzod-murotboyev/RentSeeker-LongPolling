@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.StaticHeadersWriter;
+import org.springframework.web.cors.CorsConfiguration;
 import uz.pdp.rentseekerlongpolling.security.JwtFilter;
 import uz.pdp.rentseekerlongpolling.service.AuthService;
 
@@ -26,34 +28,46 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtFilter jwtFilter;
 
+    private final PasswordEncoder passwordEncoder;
+
+    private static final String[] WHITE_LIST = {
+            "/api/auth/login",
+            "/swagger-ui/**",
+            "/api-docs/**"
+    };
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .userDetailsService(authService).passwordEncoder(passwordEncoder());
+                .userDetailsService(authService)
+                .passwordEncoder(passwordEncoder);
     }
 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        http
+                .cors()
+                .configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
+
         http
                 .csrf()
-                .disable()
+                .disable();
+
+        http
                 .authorizeRequests()
-                .antMatchers("/swagger-ui.html**", "/swagger-resources/**",
-                        "/v2/api-docs**", "/webjars/**"  , "/**") .permitAll() // it is for swagger
+                .antMatchers(WHITE_LIST)
+                .permitAll()
                 .anyRequest()
                 .authenticated();
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.headers().addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin", "*"));
+
 
     }
 
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     @Override

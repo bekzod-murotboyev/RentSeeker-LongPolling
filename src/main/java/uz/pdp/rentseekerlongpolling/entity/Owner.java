@@ -31,6 +31,13 @@ public class Owner extends BaseModel implements UserDetails {
     boolean accountNonLocked = true;
     boolean accountNonExpired = true;
 
+
+    public Owner(String username, String mail, String password) {
+        this.username = username;
+        this.mail = mail;
+        this.password = password;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

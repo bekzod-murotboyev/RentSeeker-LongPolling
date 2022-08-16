@@ -57,6 +57,8 @@ public class HomeService {
 
     private final LikeService likeService;
 
+    private final FirebaseService firebaseService;
+
 
     public boolean addHome(Home home, String chatId, BotState state) {
         Home crtHome = getNoActiveHomeByChatId(chatId);
@@ -255,12 +257,12 @@ public class HomeService {
         if (user == null)
             return new ApiResponse(false, USER_NOT_FOUND);
         Home home = modelMapper.map(homeAddDTO, Home.class);
-        home.setAttachments(attachmentService.saveToFile(request));
+        home.setAttachments(firebaseService.upload(request));
         home.setUser(user);
         String detailsPath = getDetailsPath(home);
         if (detailsPath == null) return new ApiResponse(false, "Invalid data");
         home.setDetailsPath(detailsPath);
-        home.setActive(false);
+        home.setActive(true);
         return new ApiResponse(true, SUCCESS, homeRepository.save(home));
     }
 
@@ -276,14 +278,14 @@ public class HomeService {
 
     public ApiResponse editHomeLike(UUID homeId, UUID userId) {
         Like like = likeService.changeLike(homeId, userId);
-        return like!=null?new ApiResponse(true,SUCCESS,like):
-                new ApiResponse(false,NOT_FOUND);
+        return like != null ? new ApiResponse(true, SUCCESS, like) :
+                new ApiResponse(false, NOT_FOUND);
     }
 
     public ApiResponse editHomeLike(UUID likeId) {
         Like like = likeService.changeLike(likeId);
-        return like!=null?new ApiResponse(true,SUCCESS,like):
-                new ApiResponse(false,NOT_FOUND);
+        return like != null ? new ApiResponse(true, SUCCESS, like) :
+                new ApiResponse(false, NOT_FOUND);
     }
 
 
@@ -393,6 +395,9 @@ public class HomeService {
         return new NodeElement("br", null, null);
     }
 
+    public void deleteAllHomes() {
+        homeRepository.deleteAllHomes();
+    }
 }
 
 

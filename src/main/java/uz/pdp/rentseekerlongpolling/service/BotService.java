@@ -1,10 +1,13 @@
 package uz.pdp.rentseekerlongpolling.service;
 
+import feign.Response;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendMediaGroup;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -31,9 +34,7 @@ import uz.pdp.rentseekerlongpolling.payload.telegram.simple_telegram.FileDataDTO
 import uz.pdp.rentseekerlongpolling.util.enums.*;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static uz.pdp.rentseekerlongpolling.service.LanguageService.getWord;
@@ -65,6 +66,9 @@ public class BotService {
 
     private final TelegramFeign telegramFeign;
 
+    private final AttachmentService attachmentService;
+
+    private final FirebaseService firebaseService;
 
     public AnswerCallbackQuery getAnswerCallbackQuery(CallbackQuery query, String text, Language lan) {
         AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery(query.getId());
@@ -490,11 +494,15 @@ public class BotService {
         return true;
     }
 
+    @SneakyThrows
     public void saveHomePhoto(Update update, BotState state) {
         Message message = update.getMessage();
         PhotoSize photoSize = message.getPhoto().get(message.getPhoto().size() - 1);
-        FileDataDTO filePath = telegramFeign.getFilePath(photoSize.getFileId());
-        photoSize.setFilePath(TELEGRAM_BASE+TELEGRAM_GET_FILE+filePath.getResult().getFilePath());
+        String filePath = telegramFeign.getFilePath(photoSize.getFileId()).getResult().getFilePath();
+        Response response = telegramFeign.getFile(filePath);
+        photoSize.setFilePath(firebaseService
+                .uploadByInputStream(response.body().asInputStream(), photoSize.getFileUniqueId()));
+
         Home home = new Home();
         User user = userService.getByChatId(message.getChatId().toString());
         home.setAttachments(List.of(modelMapper.map(photoSize, Attachment.class)));
@@ -909,56 +917,6 @@ public class BotService {
         return sendMessage;
     }
 
-    public HomePageableDTO showAllHomes(Update update, Language lan) {
-        InlineKeyboardMarkup markup;
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        List<InlineKeyboardButton> row1;
-        CallbackQuery query = update.getCallbackQuery();
-        Message message = query.getMessage();
-        String data = query.getData();
-        User user = userService.getByChatId(message.getChatId().toString());
-        int page = user.getCrtPage() + (data.equals(PREV) ? -1 : data.startsWith(NEXT) ? 1 : 0);
-        if (page < 0) return new HomePageableDTO(null, FIRST_PAGE_NOTIFICATION);
-        Page<Home> allHome = homeService.getAllActiveHomes(page, pageableSize);
-        if (allHome.isEmpty()) {
-            return new HomePageableDTO(null, page == 0 ? null : LAST_PAGE_NOTIFICATION);
-        } else if (user.getCrtPage() != page)
-            userService.changeUserPageByChatId(user.getChatId(), page);
-
-
-        List<SendPhoto> sendMessageList = new ArrayList<>();
-        SendPhoto sendPhoto = null;
-        for (Home home : allHome) {
-            if (sendPhoto != null)
-                sendMessageList.add(sendPhoto);
-            markup = new InlineKeyboardMarkup();
-            rowList = new ArrayList<>();
-            markup.setKeyboard(rowList);
-            row1 = new ArrayList<>();
-            rowList.add(row1);
-            sendPhoto = new SendPhoto(message.getChatId().toString(), new InputFile(home.getAttachments().get(0).getFileId()));
-            sendPhoto.setCaption(getCaptionByHome(home, lan));
-            sendPhoto.setReplyMarkup(markup);
-            Like like = likeService.getLikeByHomeAndUser(home, user);
-            row1.add(KeyboardService.getInlineButton(PHONE + home.getId(),
-                    interestService.getVisible(home, user) ? userService.getById(home.getUser().getId()).getPhoneNumber()
-                            : getWord(GET_PHONE_NUMBER, lan)));
-            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan), home.getDetailsPath()));
-            row1.add(KeyboardService
-                    .getInlineButton(LIKE + like.getId(),
-                            home.getLikes()
-                                    + " " + (like.isActive() ? LIKE_ACTIVE : LIKE_NOT_ACTIVE)));
-
-        }
-        List<InlineKeyboardButton> row2 = new ArrayList<>();
-        row2.add(KeyboardService.getInlineButton(PREV, PREV));
-        row2.add(KeyboardService.getInlineButton(BACK_TO_SHOW_MENU_SEND, getWord(BACK, lan)));
-        row2.add(KeyboardService.getInlineButton(BACK_TO_MAIN_MENU_SEND, getWord(MENU, lan)));
-        row2.add(KeyboardService.getInlineButton(NEXT, NEXT));
-        rowList.add(row2);
-        sendMessageList.add(sendPhoto);
-        return new HomePageableDTO(sendMessageList, null);
-    }
 
     public AnswerCallbackQuery homeNotFound(Update update, Language lan) {
         return getAnswerCallbackQuery(update.getCallbackQuery(), HOMES_NOT_FOUND, lan);
@@ -1334,7 +1292,60 @@ public class BotService {
         return editMessage;
     }
 
-    public List<SendPhoto> showSortedOptionsSend(Update update, Language lan) {
+    public HomePageableDTO showAllHomes(Update update, Language lan) {
+        InlineKeyboardMarkup markup;
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        List<InlineKeyboardButton> row1;
+        CallbackQuery query = update.getCallbackQuery();
+        Message message = query.getMessage();
+        String data = query.getData();
+        User user = userService.getByChatId(message.getChatId().toString());
+        int page = user.getCrtPage() + (data.equals(PREV) ? -1 : data.startsWith(NEXT) ? 1 : 0);
+        if (page < 0) return new HomePageableDTO(null, FIRST_PAGE_NOTIFICATION);
+        Page<Home> allHome = homeService.getAllActiveHomes(page, pageableSize);
+        if (allHome.isEmpty()) {
+            return new HomePageableDTO(null, page == 0 ? null : LAST_PAGE_NOTIFICATION);
+        } else if (user.getCrtPage() != page)
+            userService.changeUserPageByChatId(user.getChatId(), page);
+
+
+        Map<String, SendPhoto> sendMessageList = new LinkedHashMap<>();
+        SendPhoto sendPhoto = null;
+        Attachment attachment = new Attachment();
+        for (Home home : allHome) {
+            if (sendPhoto != null)
+                sendMessageList.put(attachment.getFilePath(), sendPhoto);
+            attachment = home.getAttachments().get(0);
+            markup = new InlineKeyboardMarkup();
+            rowList = new ArrayList<>();
+            markup.setKeyboard(rowList);
+            row1 = new ArrayList<>();
+            rowList.add(row1);
+            sendPhoto = new SendPhoto(message.getChatId().toString(), new InputFile(home.getAttachments().get(0).getFileId()));
+            sendPhoto.setCaption(getCaptionByHome(home, lan));
+            sendPhoto.setReplyMarkup(markup);
+            Like like = likeService.getLikeByHomeAndUser(home, user);
+            row1.add(KeyboardService.getInlineButton(PHONE + home.getId(),
+                    interestService.getVisible(home, user) ? userService.getById(home.getUser().getId()).getPhoneNumber()
+                            : getWord(GET_PHONE_NUMBER, lan)));
+            row1.add(KeyboardService.getInlineButton(PHOTOS + home.getId(), getWord(HOME_PHOTOS, lan), home.getDetailsPath()));
+            row1.add(KeyboardService
+                    .getInlineButton(LIKE + like.getId(),
+                            home.getLikes()
+                                    + " " + (like.isActive() ? LIKE_ACTIVE : LIKE_NOT_ACTIVE)));
+
+        }
+        List<InlineKeyboardButton> row2 = new ArrayList<>();
+        row2.add(KeyboardService.getInlineButton(PREV, PREV));
+        row2.add(KeyboardService.getInlineButton(BACK_TO_SHOW_MENU_SEND, getWord(BACK, lan)));
+        row2.add(KeyboardService.getInlineButton(BACK_TO_MAIN_MENU_SEND, getWord(MENU, lan)));
+        row2.add(KeyboardService.getInlineButton(NEXT, NEXT));
+        rowList.add(row2);
+        sendMessageList.put(attachment.getFilePath(), sendPhoto);
+        return new HomePageableDTO(sendMessageList, null);
+    }
+
+    public Map<String, SendPhoto> showSortedOptionsSend(Update update, Language lan) {
         InlineKeyboardMarkup markup = null;
         List<List<InlineKeyboardButton>> rowList;
         List<InlineKeyboardButton> row1;
@@ -1346,13 +1357,14 @@ public class BotService {
             return null;
 
         User user = userService.getByChatId(message.getChatId().toString());
-        List<SendPhoto> sendMessageList = new ArrayList<>();
+        Map<String, SendPhoto> sendMessageList = new LinkedHashMap<>();
         SendPhoto sendPhoto = null;
-
+        Attachment attachment = new Attachment();
         for (Home home : allHome) {
             if (!home.isActive()) continue;
             if (sendPhoto != null)
-                sendMessageList.add(sendPhoto);
+                sendMessageList.put(attachment.getFilePath(), sendPhoto);
+            attachment = home.getAttachments().get(0);
             markup = new InlineKeyboardMarkup();
             rowList = new ArrayList<>();
             markup.setKeyboard(rowList);
@@ -1391,36 +1403,11 @@ public class BotService {
         row2.add(0, back);
         row2.add(menu);
         sendPhoto.setReplyMarkup(markup);
-        sendMessageList.add(sendPhoto);
+        sendMessageList.put(attachment.getFilePath(), sendPhoto);
         return sendMessageList;
     }
 
-    public EditMessageText getMyNotesMenuEdit(Update update, Language lan) {
-        Message message = getMessage(update);
-        InlineKeyboardMarkup markup = KeyboardService.createInlineMarkup(List.of(
-                List.of(MY_ACCOMMODATIONS, MY_FAVOURITES),
-                List.of(BACK_TO_MAIN_MENU_EDIT)
-        ), lan);
-        EditMessageText editMessageText = new EditMessageText();
-        editMessageText.setText(getWord(CHOOSE_ACTION, lan));
-        editMessageText.setMessageId(message.getMessageId());
-        editMessageText.setChatId(message.getChatId().toString());
-        editMessageText.setReplyMarkup(markup);
-        return editMessageText;
-    }
-
-    public SendMessage getMyNotesMenuSend(Update update, Language lan) {
-        Message message = getMessage(update);
-        InlineKeyboardMarkup markup = KeyboardService.createInlineMarkup(List.of(
-                List.of(MY_ACCOMMODATIONS, MY_FAVOURITES),
-                List.of(BACK_TO_MAIN_MENU_EDIT)
-        ), lan);
-        SendMessage sendMessage = new SendMessage(message.getChatId().toString(), getWord(CHOOSE_ACTION, lan));
-        sendMessage.setReplyMarkup(markup);
-        return sendMessage;
-    }
-
-    public List<SendPhoto> getMyFavouriteHomes(Update update, Language lan) {
+    public Map<String, SendPhoto> getMyFavouriteHomes(Update update, Language lan) {
         InlineKeyboardMarkup markup = null;
         List<List<InlineKeyboardButton>> rowList;
         List<InlineKeyboardButton> row1;
@@ -1432,13 +1419,14 @@ public class BotService {
         if (allHomes.isEmpty())
             return null;
 
-        List<SendPhoto> sendMessageList = new ArrayList<>();
+        Map<String, SendPhoto> sendMessageList = new LinkedHashMap<>();
         SendPhoto sendPhoto = null;
-
+        Attachment attachment = new Attachment();
         for (Home home : allHomes) {
             if (!home.isActive()) continue;
             if (sendPhoto != null)
-                sendMessageList.add(sendPhoto);
+                sendMessageList.put(attachment.getFilePath(), sendPhoto);
+            attachment = home.getAttachments().get(0);
             markup = new InlineKeyboardMarkup();
             rowList = new ArrayList<>();
             markup.setKeyboard(rowList);
@@ -1477,11 +1465,11 @@ public class BotService {
         row2.add(0, back);
         row2.add(menu);
         sendPhoto.setReplyMarkup(markup);
-        sendMessageList.add(sendPhoto);
+        sendMessageList.put(attachment.getFilePath(), sendPhoto);
         return sendMessageList;
     }
 
-    public List<SendPhoto> getMyHomes(Update update, Language lan) {
+    public Map<String, SendPhoto> getMyHomes(Update update, Language lan) {
         InlineKeyboardMarkup markup = null;
         List<List<InlineKeyboardButton>> rowList;
         List<InlineKeyboardButton> row1;
@@ -1493,13 +1481,14 @@ public class BotService {
         if (allHomes.isEmpty())
             return null;
 
-        List<SendPhoto> sendMessageList = new ArrayList<>();
+        Map<String, SendPhoto> sendMessageList = new LinkedHashMap<>();
         SendPhoto sendPhoto = null;
-
+        Attachment attachment = new Attachment();
         for (Home home : allHomes) {
             if (!home.isActive()) continue;
             if (sendPhoto != null)
-                sendMessageList.add(sendPhoto);
+                sendMessageList.put(attachment.getFilePath(), sendPhoto);
+            attachment = home.getAttachments().get(0);
             markup = new InlineKeyboardMarkup();
             rowList = new ArrayList<>();
             markup.setKeyboard(rowList);
@@ -1543,8 +1532,33 @@ public class BotService {
         row2.add(0, back);
         row2.add(menu);
         sendPhoto.setReplyMarkup(markup);
-        sendMessageList.add(sendPhoto);
+        sendMessageList.put(attachment.getFilePath(), sendPhoto);
         return sendMessageList;
+    }
+
+    public EditMessageText getMyNotesMenuEdit(Update update, Language lan) {
+        Message message = getMessage(update);
+        InlineKeyboardMarkup markup = KeyboardService.createInlineMarkup(List.of(
+                List.of(MY_ACCOMMODATIONS, MY_FAVOURITES),
+                List.of(BACK_TO_MAIN_MENU_EDIT)
+        ), lan);
+        EditMessageText editMessageText = new EditMessageText();
+        editMessageText.setText(getWord(CHOOSE_ACTION, lan));
+        editMessageText.setMessageId(message.getMessageId());
+        editMessageText.setChatId(message.getChatId().toString());
+        editMessageText.setReplyMarkup(markup);
+        return editMessageText;
+    }
+
+    public SendMessage getMyNotesMenuSend(Update update, Language lan) {
+        Message message = getMessage(update);
+        InlineKeyboardMarkup markup = KeyboardService.createInlineMarkup(List.of(
+                List.of(MY_ACCOMMODATIONS, MY_FAVOURITES),
+                List.of(BACK_TO_MAIN_MENU_EDIT)
+        ), lan);
+        SendMessage sendMessage = new SendMessage(message.getChatId().toString(), getWord(CHOOSE_ACTION, lan));
+        sendMessage.setReplyMarkup(markup);
+        return sendMessage;
     }
 
     public DeleteMessage deleteAccommodation(Update update) {
@@ -1605,8 +1619,12 @@ public class BotService {
     }
 
     public SendMessage sendLimitationError(Update update, Language lan) {
-        SendMessage sendMessage=new SendMessage(getMessage(update).getChatId().toString(), getWord(LIMITATION_ERROR, lan));
+        SendMessage sendMessage = new SendMessage(getMessage(update).getChatId().toString(), getWord(LIMITATION_ERROR, lan));
         sendMessage.setReplyMarkup(KeyboardService.createInlineMarkup(List.of(List.of(MENU)), lan));
         return sendMessage;
+    }
+
+    public void updateAttachmentFileId(String path, String fileId) {
+        attachmentService.updateFileIdByPath(path, fileId);
     }
 }

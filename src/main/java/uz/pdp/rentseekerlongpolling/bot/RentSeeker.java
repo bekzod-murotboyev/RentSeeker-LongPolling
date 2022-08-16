@@ -6,7 +6,9 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMediaGroup;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import uz.pdp.rentseekerlongpolling.payload.LanStateDTO;
@@ -21,12 +23,14 @@ import uz.pdp.rentseekerlongpolling.util.enums.Role;
 import uz.pdp.rentseekerlongpolling.util.security.BaseData;
 
 import java.util.List;
+import java.util.Map;
 
 import static uz.pdp.rentseekerlongpolling.util.constant.Constant.CHANGE_LANGUAGE;
 import static uz.pdp.rentseekerlongpolling.util.constant.Constant.MY_FAVOURITES;
 import static uz.pdp.rentseekerlongpolling.util.constant.Constant.*;
 import static uz.pdp.rentseekerlongpolling.util.enums.BotState.*;
-import static uz.pdp.rentseekerlongpolling.util.security.BaseData.*;
+import static uz.pdp.rentseekerlongpolling.util.security.BaseData.TOKEN;
+import static uz.pdp.rentseekerlongpolling.util.security.BaseData.USERNAME;
 
 @Component
 @RequiredArgsConstructor
@@ -66,35 +70,35 @@ public class RentSeeker extends TelegramLongPollingBot {
             if (message.hasText()) {
                 String text = message.getText();
                 if (text.equals(START)) {
-                    if (!state.equals(BotState.CHOOSE_LANGUAGE)) {
-                        state = role.equals(Role.ADMIN) ? BotState.ADMIN_MENU_SEND : BotState.MAIN_MENU_SEND;
+                    if (!state.equals(CHOOSE_LANGUAGE)) {
+                        state = role.equals(Role.ADMIN) ? ADMIN_MENU_SEND : MAIN_MENU_SEND;
                         execute(botService.removeKeyBoardMarkup(update));
                     }
                 } else if (text.equals(TOKEN))
-                    state = BotState.CHECK_USER_BY_ADMIN;
-                else if (state.equals(BotState.CHECK_USER_BY_ADMIN) && botService.checkByCode(update)) {
-                    state = BotState.ADMIN_MENU_SEND;
+                    state = CHECK_USER_BY_ADMIN;
+                else if (state.equals(CHECK_USER_BY_ADMIN) && botService.checkByCode(update)) {
+                    state = ADMIN_MENU_SEND;
                     role = Role.ADMIN;
-                } else if (state.equals(BotState.REGISTER))
-                    state = BotState.SETTINGS_MENU_SEND;
-                else if (state.equals(BotState.LOCATION_MENU))
-                    state = BotState.WRITE_OR_SEND_LOCATION;
-                else if (state.equals(BotState.GIVE_ADDRESS))
-                    state = BotState.GIVE_HOME_TYPE_SEND;
-                else if (state.equals(BotState.GIVE_HOME_NUMBER))
-                    state = BotState.GIVE_HOME_AREA_SEND;
-                else if (state.equals(BotState.GIVE_HOME_AREA_SEND) || state.equals(BotState.GIVE_HOME_AREA_EDIT))
-                    state = BotState.GIVE_HOME_PHOTO_SEND;
-                else if (state.equals(BotState.GIVE_HOME_PRICE_EDIT) || state.equals(GIVE_HOME_PRICE_SEND))
-                    state = BotState.GIVE_HOME_DESCRIPTION;
-                else if (state.equals(BotState.GIVE_HOME_DESCRIPTION))
-                    state = BotState.SAVE_HOME_TO_STORE;
-                else if (state.equals(BotState.CHOOSE_HOME_NUMBER_EDIT) || state.equals(BotState.CHOOSE_HOME_NUMBER_SEND))
-                    state = BotState.CHOOSE_HOME_MIN_PRICE_SEND;
-                else if (state.equals(BotState.CHOOSE_HOME_MIN_PRICE_SEND) || state.equals(BotState.CHOOSE_HOME_MIN_PRICE_EDIT))
-                    state = BotState.CHOOSE_HOME_MAX_PRICE_SEND;
-                else if (state.equals(BotState.CHOOSE_HOME_MAX_PRICE_SEND) || state.equals(BotState.CHOOSE_HOME_MAX_PRICE_EDIT))
-                    state = BotState.SHOW_SORTED_OPTIONS;
+                } else if (state.equals(REGISTER))
+                    state = SETTINGS_MENU_SEND;
+                else if (state.equals(LOCATION_MENU))
+                    state = WRITE_OR_SEND_LOCATION;
+                else if (state.equals(GIVE_ADDRESS))
+                    state = GIVE_HOME_TYPE_SEND;
+                else if (state.equals(GIVE_HOME_NUMBER))
+                    state = GIVE_HOME_AREA_SEND;
+                else if (state.equals(GIVE_HOME_AREA_SEND) || state.equals(GIVE_HOME_AREA_EDIT))
+                    state = GIVE_HOME_PHOTO_SEND;
+                else if (state.equals(GIVE_HOME_PRICE_EDIT) || state.equals(GIVE_HOME_PRICE_SEND))
+                    state = GIVE_HOME_DESCRIPTION;
+                else if (state.equals(GIVE_HOME_DESCRIPTION))
+                    state = SAVE_HOME_TO_STORE;
+                else if (state.equals(CHOOSE_HOME_NUMBER_EDIT) || state.equals(CHOOSE_HOME_NUMBER_SEND))
+                    state = CHOOSE_HOME_MIN_PRICE_SEND;
+                else if (state.equals(CHOOSE_HOME_MIN_PRICE_SEND) || state.equals(CHOOSE_HOME_MIN_PRICE_EDIT))
+                    state = CHOOSE_HOME_MAX_PRICE_SEND;
+                else if (state.equals(CHOOSE_HOME_MAX_PRICE_SEND) || state.equals(CHOOSE_HOME_MAX_PRICE_EDIT))
+                    state = SHOW_SORTED_OPTIONS;
                 else if (state.equals(GIVE_HOME_PHOTO_SEND_AGAIN) && text.equals(LanguageService.getWord(BACK, lan)))
                     state = GIVE_HOME_PHOTO_SEND_SIMPLE;
                 else if (state.equals(GIVE_HOME_PHOTO_SEND_AGAIN) && text.equals(LanguageService.getWord(NEXT_ACTION, lan)))
@@ -103,15 +107,15 @@ public class RentSeeker extends TelegramLongPollingBot {
                     execute(botService.setError(update));
                     return;
                 }
-            } else if (message.hasContact() && state.equals(BotState.REGISTER))
-                state = BotState.SETTINGS_MENU_SEND;
-            else if (message.hasLocation() && state.equals(BotState.LOCATION_MENU))
-                state = BotState.GIVE_HOME_TYPE_SEND;
+            } else if (message.hasContact() && state.equals(REGISTER))
+                state = SETTINGS_MENU_SEND;
+            else if (message.hasLocation() && state.equals(LOCATION_MENU))
+                state = GIVE_HOME_TYPE_SEND;
             else if (message.hasPhoto() &&
-                    (state.equals(BotState.GIVE_HOME_PHOTO_SEND) ||
+                    (state.equals(GIVE_HOME_PHOTO_SEND) ||
                             state.equals(GIVE_HOME_PHOTO_SEND_SIMPLE) ||
-                            state.equals(BotState.GIVE_HOME_PHOTO_EDIT) ||
-                            state.equals(BotState.GIVE_HOME_PHOTO_SEND_AGAIN)))
+                            state.equals(GIVE_HOME_PHOTO_EDIT) ||
+                            state.equals(GIVE_HOME_PHOTO_SEND_AGAIN)))
                 state = GIVE_HOME_PHOTO_SEND_AGAIN;
             else {
                 execute(botService.setError(update));
@@ -121,136 +125,136 @@ public class RentSeeker extends TelegramLongPollingBot {
             switch (update.getCallbackQuery().getData()) {
                 case UZ: {
                     lan = Language.UZ;
-                    state = state.equals(BotState.CHOOSE_LANGUAGE) ? BotState.MAIN_MENU_EDIT : BotState.SETTINGS_MENU_EDIT;
+                    state = state.equals(CHOOSE_LANGUAGE) ? MAIN_MENU_EDIT : SETTINGS_MENU_EDIT;
                 }
                 break;
                 case RU: {
                     lan = Language.RU;
-                    state = state.equals(BotState.CHOOSE_LANGUAGE) ? BotState.MAIN_MENU_EDIT : BotState.SETTINGS_MENU_EDIT;
+                    state = state.equals(CHOOSE_LANGUAGE) ? MAIN_MENU_EDIT : SETTINGS_MENU_EDIT;
                 }
                 break;
                 case EN: {
                     lan = Language.EN;
-                    state = state.equals(BotState.CHOOSE_LANGUAGE) ? BotState.MAIN_MENU_EDIT : BotState.SETTINGS_MENU_EDIT;
+                    state = state.equals(CHOOSE_LANGUAGE) ? MAIN_MENU_EDIT : SETTINGS_MENU_EDIT;
                 }
                 break;
                 case ADMIN:
-                    state = BotState.ADMIN_PANEL;
+                    state = ADMIN_PANEL;
                     break;
                 case SETTINGS:
                 case BACK_TO_SETTINGS_MENU_EDIT:
-                    state = BotState.SETTINGS_MENU_EDIT;
+                    state = SETTINGS_MENU_EDIT;
                     break;
                 case BACK_TO_ADMIN_MENU:
-                    state = BotState.ADMIN_MENU_EDIT;
+                    state = ADMIN_MENU_EDIT;
                     break;
                 case BACK_TO_SETTINGS_MENU_SEND:
-                    state = BotState.SETTINGS_MENU_SEND;
+                    state = SETTINGS_MENU_SEND;
                     break;
                 case BACK_TO_MAIN_MENU_SEND:
-                    state = BotState.MAIN_MENU_SEND;
+                    state = MAIN_MENU_SEND;
                     break;
                 case BACK_TO_MAIN_MENU_EDIT:
                 case USER:
                 case MENU:
-                    state = BotState.MAIN_MENU_EDIT;
+                    state = MAIN_MENU_EDIT;
                     break;
                 case CHANGE_LANGUAGE:
                     state = BotState.CHANGE_LANGUAGE;
                     break;
                 case REGISTRATION:
-                    state = BotState.REGISTER;
+                    state = REGISTER;
                     break;
                 case ADD_ACCOMMODATION:
                 case BACK_TO_GIVE_HOME_STATUS:
-                    state = BotState.GIVE_HOME_STATUS;
+                    state = GIVE_HOME_STATUS;
                     break;
                 case BACK_TO_WRITE_SEND_LOCATION:
                 case FOR_RENTING:
                 case FOR_SELLING:
-                    state = BotState.WRITE_OR_SEND_LOCATION;
+                    state = WRITE_OR_SEND_LOCATION;
                     break;
                 case BACK_SEND_LOCATION:
                 case SEND_LOCATION:
-                    state = BotState.LOCATION_MENU;
+                    state = LOCATION_MENU;
                     break;
                 case BACK_TO_GIVE_REGION:
                 case WRITE_ADDRESS:
-                    state = BotState.GIVE_REGION;
+                    state = GIVE_REGION;
                     break;
                 case BACK_TO_GIVE_DISTRICT:
-                    state = BotState.GIVE_DISTRICT;
+                    state = GIVE_DISTRICT;
                     break;
                 case BACK_TO_GIVE_ADDRESS:
-                    state = BotState.GIVE_ADDRESS;
+                    state = GIVE_ADDRESS;
                     break;
                 case BACK_TO_GIVE_HOME_TYPE:
-                    state = BotState.GIVE_HOME_TYPE_EDIT;
+                    state = GIVE_HOME_TYPE_EDIT;
                     break;
                 case BACK_TO_GIVE_HOME_NUMBER:
-                    state = BotState.GIVE_HOME_NUMBER;
+                    state = GIVE_HOME_NUMBER;
                     break;
                 case BACK_TO_GIVE_HOME_AREA:
-                    state = BotState.GIVE_HOME_AREA_EDIT;
+                    state = GIVE_HOME_AREA_EDIT;
                     break;
                 case BACK_TO_GIVE_HOME_PHOTO:
-                    state = BotState.GIVE_HOME_PHOTO_EDIT;
+                    state = GIVE_HOME_PHOTO_EDIT;
                     break;
                 case NEXT_ACTION:
                 case BACK_TO_GIVE_HOME_PRICE:
-                    state = BotState.GIVE_HOME_PRICE_EDIT;
+                    state = GIVE_HOME_PRICE_EDIT;
                     break;
                 case BACK_TO_SHOW_MENU_EDIT:
                 case SHOW_ACCOMMODATIONS:
-                    state = BotState.SHOW_MENU_EDIT;
+                    state = SHOW_MENU_EDIT;
                     break;
                 case BACK_TO_SHOW_MENU_SEND:
-                    state = BotState.SHOW_MENU_SEND;
+                    state = SHOW_MENU_SEND;
                     break;
                 case SHOW_ALL:
                 case PREV:
                 case NEXT:
-                    state = BotState.SHOW_OPTIONS;
+                    state = SHOW_OPTIONS;
                     break;
                 case BACK_TO_CHOOSE_REGION:
                 case SEARCH:
-                    state = BotState.CHOOSE_REGION;
+                    state = CHOOSE_REGION;
                     break;
                 case BACK_TO_CHOOSE_DISTRICT:
-                    state = BotState.CHOOSE_DISTRICT;
+                    state = CHOOSE_DISTRICT;
                     break;
                 case BACK_TO_CHOOSE_HOME_STATUS:
-                    state = BotState.CHOOSE_HOME_STATUS;
+                    state = CHOOSE_HOME_STATUS;
                     break;
                 case BACK_TO_CHOOSE_HOME_TYPE:
                 case GET_RENTING:
                 case FOR_BUY:
-                    state = BotState.CHOOSE_HOME_TYPE;
+                    state = CHOOSE_HOME_TYPE;
                     break;
                 case BACK_TO_CHOOSE_HOME_NUMBER:
-                    state = BotState.CHOOSE_HOME_NUMBER_EDIT;
+                    state = CHOOSE_HOME_NUMBER_EDIT;
                     break;
                 case BACK_TO_CHOOSE_MIN_PRICE:
-                    state = BotState.CHOOSE_HOME_MIN_PRICE_EDIT;
+                    state = CHOOSE_HOME_MIN_PRICE_EDIT;
                     break;
                 case BACK_TO_CHOOSE_MAX_PRICE_SEND:
-                    state = BotState.CHOOSE_HOME_MAX_PRICE_SEND;
+                    state = CHOOSE_HOME_MAX_PRICE_SEND;
                     break;
                 case BACK_TO_CHOOSE_MAX_PRICE_EDIT:
-                    state = BotState.CHOOSE_HOME_MAX_PRICE_EDIT;
+                    state = CHOOSE_HOME_MAX_PRICE_EDIT;
                     break;
                 case BACK_TO_MY_NOTES_MENU_EDIT:
                 case MY_NOTES:
-                    state = BotState.MY_NOTES_MENU_EDIT;
+                    state = MY_NOTES_MENU_EDIT;
                     break;
                 case BACK_TO_MY_NOTES_MENU_SEND:
-                    state = BotState.MY_NOTES_MENU_SEND;
+                    state = MY_NOTES_MENU_SEND;
                     break;
                 case MY_FAVOURITES:
                     state = BotState.MY_FAVOURITES;
                     break;
                 case MY_ACCOMMODATIONS:
-                    state = BotState.MY_HOMES;
+                    state = MY_HOMES;
                     break;
                 case SKIP:
                     state = botService.getStateBySkip(update, state);
@@ -302,7 +306,7 @@ public class RentSeeker extends TelegramLongPollingBot {
                     execute(botService.removeKeyBoardMarkup(update));
                     execute(botService.getSettingMenuSend(update, lan));
                 } else {
-                    state = BotState.REGISTER;
+                    state = REGISTER;
                     execute(botService.getRegister(update, lan));
                 }
             }
@@ -328,7 +332,7 @@ public class RentSeeker extends TelegramLongPollingBot {
                         execute(botService.setWriteOrSendLocationMenuSend(update, lan));
                     } else {
                         execute(botService.getMenuLocation(update, lan));
-                        state = BotState.LOCATION_MENU;
+                        state = LOCATION_MENU;
                     }
 
                 }
@@ -355,7 +359,7 @@ public class RentSeeker extends TelegramLongPollingBot {
                 } else {
                     execute(botService.LocationNotFound(update, lan));
                     execute(botService.getMenuLocation(update, lan));
-                    state = BotState.LOCATION_MENU;
+                    state = LOCATION_MENU;
                 }
             }
             break;
@@ -370,7 +374,7 @@ public class RentSeeker extends TelegramLongPollingBot {
                     execute(botService.giveHomeAreaMenuSend(update, lan));
                 else {
                     execute(botService.giveHomeNumberMenuSend(update, lan, state));
-                    state = BotState.GIVE_HOME_NUMBER;
+                    state = GIVE_HOME_NUMBER;
                 }
             }
             break;
@@ -382,7 +386,7 @@ public class RentSeeker extends TelegramLongPollingBot {
                     execute(botService.giveHomePhotoMenuSend(update, lan));
                 else {
                     execute(botService.giveHomeAreaMenuSend(update, lan));
-                    state = BotState.GIVE_HOME_AREA_SEND;
+                    state = GIVE_HOME_AREA_SEND;
                 }
             }
             break;
@@ -439,13 +443,13 @@ public class RentSeeker extends TelegramLongPollingBot {
                 }
                 if (update.getCallbackQuery().getData().equals(SHOW_ALL))
                     execute(botService.deleteMessage(update));
-                for (SendPhoto sendPhoto : homePageableDTO.getSendPhotos())
-                    execute(sendPhoto);
+                showHomes(homePageableDTO.getSendPhotos());
+
             }
             break;
             case SHOW_HOME_PHONE_MENU_ALL: {
                 execute(botService.changeVisibleHomePhone(update, lan, BACK_TO_SHOW_MENU_SEND, state));
-                state = BotState.SHOW_OPTIONS;
+                state = SHOW_OPTIONS;
             }
             break;
             case SHOW_HOME_PHONE_MENU_FAVOURITES: {
@@ -455,17 +459,17 @@ public class RentSeeker extends TelegramLongPollingBot {
             break;
             case SHOW_HOME_PHONE_MENU_MY_ACCOMMODATIONS: {
                 execute(botService.changeVisibleHomePhone(update, lan, BACK_TO_MY_NOTES_MENU_SEND, state));
-                state = BotState.MY_HOMES;
+                state = MY_HOMES;
             }
             break;
             case SHOW_HOME_PHONE_MENU_SEARCH: {
                 execute(botService.changeVisibleHomePhone(update, lan, BACK_TO_CHOOSE_MAX_PRICE_SEND, state));
-                state = BotState.SHOW_SORTED_OPTIONS;
+                state = SHOW_SORTED_OPTIONS;
             }
             break;
             case CHANGE_HOME_LIKE_MENU_ALL: {
                 execute(botService.changeHomeLike(update, lan, BACK_TO_SHOW_MENU_SEND, state));
-                state = BotState.SHOW_OPTIONS;
+                state = SHOW_OPTIONS;
             }
             break;
             case CHANGE_HOME_LIKE_MENU_FAVOURITES: {
@@ -475,12 +479,12 @@ public class RentSeeker extends TelegramLongPollingBot {
             break;
             case CHANGE_HOME_LIKE_MENU_MY_ACCOMMODATIONS: {
                 execute(botService.changeHomeLike(update, lan, BACK_TO_MY_NOTES_MENU_SEND, state));
-                state = BotState.MY_HOMES;
+                state = MY_HOMES;
             }
             break;
             case CHANGE_HOME_LIKE_MENU_SEARCH: {
                 execute(botService.changeHomeLike(update, lan, BACK_TO_CHOOSE_MAX_PRICE_SEND, state));
-                state = BotState.SHOW_SORTED_OPTIONS;
+                state = SHOW_SORTED_OPTIONS;
             }
             break;
             case CHOOSE_REGION:
@@ -503,7 +507,7 @@ public class RentSeeker extends TelegramLongPollingBot {
                     execute(botService.chooseMinPriceMenuSend(update, lan));
                 } else {
                     execute(botService.chooseHomeNumberSend(update, lan));
-                    state = BotState.CHOOSE_HOME_NUMBER_SEND;
+                    state = CHOOSE_HOME_NUMBER_SEND;
                 }
             }
             break;
@@ -516,7 +520,7 @@ public class RentSeeker extends TelegramLongPollingBot {
                         execute(botService.chooseMaxPriceMenuSend(update, lan));
                     } else {
                         execute(botService.chooseMinPriceMenuSend(update, lan));
-                        state = BotState.CHOOSE_HOME_MIN_PRICE_SEND;
+                        state = CHOOSE_HOME_MIN_PRICE_SEND;
                     }
                 } else
                     execute(botService.chooseMaxPriceMenuSend(update, lan));
@@ -528,16 +532,15 @@ public class RentSeeker extends TelegramLongPollingBot {
             case SHOW_SORTED_OPTIONS: {
                 if (botService.saveSearchMaxPrice(update)) {
                     execute(botService.deleteMessage(update));
-                    List<SendPhoto> sendPhotos = botService.showSortedOptionsSend(update, lan);
+                    Map<String, SendPhoto> sendPhotos = botService.showSortedOptionsSend(update, lan);
                     if (sendPhotos == null) {
                         execute(botService.searchedHomeNotFound(update, lan));
                         return;
                     }
-                    for (SendPhoto sendPhoto : sendPhotos)
-                        execute(sendPhoto);
+                    showHomes(sendPhotos);
                 } else {
                     execute(botService.chooseMaxPriceMenuSend(update, lan));
-                    state = BotState.CHOOSE_HOME_MAX_PRICE_SEND;
+                    state = CHOOSE_HOME_MAX_PRICE_SEND;
                 }
             }
             break;
@@ -548,25 +551,23 @@ public class RentSeeker extends TelegramLongPollingBot {
                 execute(botService.getMyNotesMenuSend(update, lan));
                 break;
             case MY_FAVOURITES: {
-                List<SendPhoto> sendPhotos = botService.getMyFavouriteHomes(update, lan);
+                Map<String, SendPhoto> sendPhotos = botService.getMyFavouriteHomes(update, lan);
                 if (sendPhotos == null) {
                     execute(botService.homeNotFound(update, lan));
                     return;
                 }
                 execute(botService.deleteMessage(update));
-                for (SendPhoto sendPhoto : sendPhotos)
-                    execute(sendPhoto);
+                showHomes(sendPhotos);
             }
             break;
             case MY_HOMES: {
-                List<SendPhoto> sendPhotos = botService.getMyHomes(update, lan);
+                Map<String, SendPhoto> sendPhotos = botService.getMyHomes(update, lan);
                 if (sendPhotos == null) {
                     execute(botService.homeNotFound(update, lan));
                     return;
                 }
                 execute(botService.deleteMessage(update));
-                for (SendPhoto sendPhoto : sendPhotos)
-                    execute(sendPhoto);
+                showHomes(sendPhotos);
             }
             break;
             case DELETE_ACCOMMODATION:
@@ -647,6 +648,9 @@ public class RentSeeker extends TelegramLongPollingBot {
                 case BACK_TO_ADMIN_MENU:
                     state = ADMIN_MENU_EDIT;
                     break;
+                case REMOVE:
+                    state = REMOVE_HOME;
+                    break;
                 default:
                     state = adminBotService.getState(update, state);
             }
@@ -710,8 +714,11 @@ public class RentSeeker extends TelegramLongPollingBot {
                     execute(sendMediaGroup);
                 else
                     execute(botService.itHasOnlyOnePic(update, lan));
+                break;
             }
-            break;
+            case REMOVE_HOME:
+                execute(adminBotService.removeAllHomes(update, lan));
+                break;
             case ERROR:
             default:
                 execute(botService.setError(update));
@@ -727,6 +734,20 @@ public class RentSeeker extends TelegramLongPollingBot {
         }
         for (SendPhoto sendPhoto : sendPhotos)
             execute(sendPhoto);
+
+    }
+
+    private void showHomes(Map<String, SendPhoto> photoMap) throws TelegramApiException {
+        for (String path : photoMap.keySet()) {
+            SendPhoto sendPhoto = photoMap.get(path);
+            try {
+                execute(sendPhoto);
+            } catch (Exception e) {
+                sendPhoto.setPhoto(new InputFile(path));
+                List<PhotoSize> list = execute(sendPhoto).getPhoto();
+                botService.updateAttachmentFileId(path, list.get(list.size()-1).getFileId());
+            }
+        }
 
     }
 

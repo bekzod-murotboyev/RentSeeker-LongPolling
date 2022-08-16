@@ -1,6 +1,7 @@
 package uz.pdp.rentseekerlongpolling.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.protobuf.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class HomeController {
     private final HomeService homeService;
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "3") Integer size) {
+    public ResponseEntity<ApiResponse> getAll(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "3") Integer size) {
         ApiResponse response = homeService.getAllHome(page, size);
         return ResponseEntity.status(response.isSuccess() ? OK : NOT_FOUND).body(response);
     }
@@ -60,8 +61,8 @@ public class HomeController {
     }
 
     @GetMapping("/favourite")
-    public ResponseEntity<ApiResponse> getFavouriteHomes(@RequestParam UUID userId, @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "3") Integer size){
-        ApiResponse response=homeService.getFavouriteHomesByUserId(userId,page,size);
+    public ResponseEntity<ApiResponse> getFavouriteHomes(@RequestParam UUID userId, @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "3") Integer size) {
+        ApiResponse response = homeService.getFavouriteHomesByUserId(userId, page, size);
         return ResponseEntity.status(response.isSuccess() ? OK : NOT_FOUND).body(response);
     }
 
@@ -72,26 +73,26 @@ public class HomeController {
     }
 
     @PutMapping
-    public ResponseEntity<?> editHome(@RequestParam UUID id,@Valid @RequestBody HomeEditDTO homeEditDTO) {
-        ApiResponse response = homeService.editHome(id,homeEditDTO);
+    public ResponseEntity<?> editHome(@RequestParam UUID id, @Valid @RequestBody HomeEditDTO homeEditDTO) {
+        ApiResponse response = homeService.editHome(id, homeEditDTO);
         return ResponseEntity.status(response.isSuccess() ? ACCEPTED : CONFLICT).body(response);
     }
 
 
     @PutMapping("/like")
-    public ResponseEntity<ApiResponse> changeHomeLike(@RequestParam UUID homeId,@RequestParam UUID userId){
-        ApiResponse response = homeService.editHomeLike(homeId,userId);
+    public ResponseEntity<ApiResponse> changeHomeLike(@RequestParam UUID homeId, @RequestParam UUID userId) {
+        ApiResponse response = homeService.editHomeLike(homeId, userId);
         return ResponseEntity.status(response.isSuccess() ? ACCEPTED : CONFLICT).body(response);
     }
 
     @PutMapping("/likeById")
-    public ResponseEntity<ApiResponse> changeHomeLike(@RequestParam UUID likeId){
+    public ResponseEntity<ApiResponse> changeHomeLike(@RequestParam UUID likeId) {
         ApiResponse response = homeService.editHomeLike(likeId);
         return ResponseEntity.status(response.isSuccess() ? ACCEPTED : CONFLICT).body(response);
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteHome(@RequestParam UUID id){
+    public ResponseEntity<?> deleteHome(@RequestParam UUID id) {
         ApiResponse response = homeService.delete(id);
         return ResponseEntity.status(response.isSuccess() ? NO_CONTENT : NOT_FOUND).body(response);
     }

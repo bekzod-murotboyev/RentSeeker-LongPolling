@@ -1,11 +1,14 @@
 package uz.pdp.rentseekerlongpolling.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import uz.pdp.rentseekerlongpolling.payload.auth.AuthDTO;
+import uz.pdp.rentseekerlongpolling.payload.response.ApiResponse;
 import uz.pdp.rentseekerlongpolling.repository.OwnerRepository;
 
 @Service

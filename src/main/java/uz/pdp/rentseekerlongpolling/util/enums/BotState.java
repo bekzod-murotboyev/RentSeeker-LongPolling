@@ -75,23 +75,6 @@ public enum BotState {
     ERROR,
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //ADMIN
 
     //BOT_STATE
@@ -120,5 +103,6 @@ public enum BotState {
     ADMIN_DAY_HOMES_INFO,
     ADMIN_WEEK_HOMES_INFO,
     ADMIN_HOMES_INFO,
-    ADMIN_HOMES_INFO_EDIT;
+    ADMIN_HOMES_INFO_EDIT,
+    REMOVE_HOME;
 }
